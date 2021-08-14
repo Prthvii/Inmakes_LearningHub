@@ -1,0 +1,16 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
+final BlckColor = Color(0xff002333);
+final liteBlack = Color(0xff13394A);
+final buttonGreen = Color(0xff00C458);
+final BlckTxtClr = Color(0xff446270);
+final GreyTxtClr = Color(0xff9F9F9F);
+
+const blckTextStyle = TextStyle(
+    fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff446270));
+const WhiteTextStyle =
+    TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white);
+const Txt12Med = TextStyle(fontSize: 14, fontWeight: FontWeight.w500);
+const Txt24Bold = TextStyle(fontSize: 26, fontWeight: FontWeight.bold);
