@@ -74,6 +74,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_zoom_drawer:
+    dependency: "direct dev"
+    description:
+      name: flutter_zoom_drawer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   introduction_screen:
     dependency: "direct dev"
     description:
@@ -163,13 +170,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
-  titled_navigation_bar:
-    dependency: "direct dev"
-    description:
-      name: titled_navigation_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.0"
   typed_data:
     dependency: transitive
     description:

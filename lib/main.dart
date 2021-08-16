@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'Screens/EnterNum.dart';
+import 'package:learninghub/BottomNav.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,8 +13,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Gilory'),
-      // home: test(),
-      home: EnterNum(),
+      home: BottomNav(),
+      // home: EnterNum(),
     );
   }
 }

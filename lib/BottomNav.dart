@@ -100,11 +100,11 @@ class _BottomNavState extends State<BottomNav> {
       backgroundColor: Colors.white,
       handleAndroidBackButtonPress: true,
       decoration: NavBarDecoration(
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.circular(10.0),
         colorBehindNavBar: Colors.white,
       ),
       popAllScreensOnTapOfSelectedTab: true,
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.all(30),
       popActionScreens: PopActionScreensType.all,
       itemAnimationProperties: ItemAnimationProperties(
         duration: Duration(milliseconds: 200),
@@ -116,6 +116,8 @@ class _BottomNavState extends State<BottomNav> {
         duration: Duration(milliseconds: 200),
       ),
       navBarStyle: NavBarStyle.style1,
+      bottomScreenMargin: 1,
+      navBarHeight: 65,
     );
   }
 }
