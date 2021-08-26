@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:learninghub/Const/Constants.dart';
+import 'package:learninghub/MainScreens/ProfilePage.dart';
 
 class DrawerWidget extends StatefulWidget {
   @override
@@ -13,50 +15,96 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       child: SafeArea(
         child: SizedBox(
           child: Drawer(
-            elevation: 1,
+            elevation: 0,
             child: Container(
-              decoration: BoxDecoration(color: Colors.red),
+              decoration: BoxDecoration(color: BlckColor),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                child: Stack(children: [
-                  Wrap(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    runSpacing: 20,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.white,
-                        ),
+                child: Column(
+                  children: [
+                    _createHeader(),
+                    Flexible(
+                      child: ListView(
+                        physics: BouncingScrollPhysics(),
+                        children: [
+                          _createDrawerItem(
+                              text: "Subrscriptions", onTap: () {}),
+                          Divider(
+                            color: Colors.grey,
+                          ),
+                          _createDrawerItem(text: "Downloads", onTap: () {}),
+                          Divider(
+                            color: Colors.grey,
+                          ),
+                          _createDrawerItem(
+                              text: "Notifications", onTap: () {}),
+                          Divider(
+                            color: Colors.grey,
+                          ),
+                          _createDrawerItem(text: "Referrals", onTap: () {}),
+                          Divider(
+                            color: Colors.grey,
+                          ),
+                          _createDrawerItem(text: "Share app", onTap: () {}),
+                          Divider(
+                            color: Colors.grey,
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 10, top: 10),
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: buttonGreen,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "Logout",
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Container(
+                            height: 47,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border:
+                                    Border.all(color: buttonGreen, width: 2)),
+                            child: Text(
+                              "Enquire now",
+                              style: TextStyle(
+                                  color: buttonGreen,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        ],
                       ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      _createDrawerItem(
-                          iccon: Icons.credit_card,
-                          text: "My Cards",
-                          onTap: () {}),
-                      _createDrawerItem(
-                          iccon: Icons.bar_chart, text: "Budget", onTap: () {}),
-                      _createDrawerItem(
-                          iccon: Icons.swap_horiz_outlined,
-                          text: "Saving",
-                          onTap: () {}),
-                      _createDrawerItem(
-                          iccon: Icons.swap_horiz_outlined,
-                          text: "Transfer",
-                          onTap: () {}),
-                    ],
-                  ),
-                  Align(
-                      child: _createDrawerItem(
-                          iccon: Icons.logout, text: "SignOut", onTap: () {}),
-                      alignment: Alignment.bottomLeft)
-                ]),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -65,19 +113,23 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     );
   }
 
-  Widget _createDrawerItem(
-      {String text, IconData iccon, GestureTapCallback onTap}) {
+  Widget _createDrawerItem({String text, GestureTapCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.only(bottom: 10, top: 10),
         child: Row(
           // mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(
-              iccon,
-              color: Colors.white,
-              size: 25,
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: buttonGreen,
+                ),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              height: 30,
+              width: 30,
             ),
             SizedBox(
               width: 10,
@@ -87,7 +139,87 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 18),
+                  fontSize: 15),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _createHeader() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+      },
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.25,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: GreyTxtClr)),
+                child: Icon(
+                  Icons.close,
+                  color: buttonGreen,
+                  size: 14,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: buttonGreen, width: 2),
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/103058/s960_Minister_Donelan.jpeg"),
+                          fit: BoxFit.cover),
+                      shape: BoxShape.circle),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Aaron Taylor",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      "ID: 1234",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300),
+                    ),
+                  ],
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: buttonGreen,
+                  size: 16,
+                )
+              ],
             ),
           ],
         ),

@@ -99,6 +99,8 @@ class _BottomNavState extends State<BottomNav> {
       confineInSafeArea: true,
       backgroundColor: Colors.white,
       handleAndroidBackButtonPress: true,
+      hideNavigationBarWhenKeyboardShows: true,
+      // hideNavigationBar: true,
       decoration: NavBarDecoration(
         borderRadius: BorderRadius.circular(10.0),
         colorBehindNavBar: Colors.white,

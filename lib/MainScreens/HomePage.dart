@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/Const/Constants.dart';
+import 'package:learninghub/Screens/SingleSubject.dart';
 import 'package:learninghub/Widgets/Drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,6 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // final zoomDrawerController;
+  // HomePage(this.zoomDrawerController);
   String dropdownValue;
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -23,9 +27,9 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
         title: Row(
           children: [
-            SizedBox(
-              width: 50,
-            ),
+            // SizedBox(
+            //   width: 50,
+            // ),
             GestureDetector(
               onTap: () => scaffoldKey.currentState.openDrawer(),
               child: Container(
@@ -45,12 +49,9 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: 15,
             ),
-            Text(
-              "Icon here",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
+            SvgPicture.asset(
+              "assets/images/logo.svg",
+              height: 35,
             ),
           ],
         ),
@@ -214,20 +215,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget SubjectsList() {
-    return Container(
-      height: 80,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          separatorBuilder: (context, index) => SizedBox(
-            width: 10,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SingleSub()),
+        );
+      },
+      child: Container(
+        height: 80,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            separatorBuilder: (context, index) => SizedBox(
+              width: 10,
+            ),
+            shrinkWrap: true,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return subs(index);
+            },
           ),
-          shrinkWrap: true,
-          itemCount: 5,
-          itemBuilder: (context, index) {
-            return subs(index);
-          },
         ),
       ),
     );

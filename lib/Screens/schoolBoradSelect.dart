@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/Const/Constants.dart';
 
 import 'introScreens.dart';
@@ -23,6 +24,16 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
                 height: MediaQuery.of(context).size.height * 0.7,
                 child: Stack(
                   children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 80),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          "assets/images/logo.svg",
+                          height: 100,
+                          width: 100,
+                        ),
+                      ),
+                    ),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(

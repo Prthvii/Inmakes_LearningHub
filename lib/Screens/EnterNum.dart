@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Screens/OTPScreen.dart';
 
@@ -24,6 +25,16 @@ class _EnterNumState extends State<EnterNum> {
                 height: MediaQuery.of(context).size.height * 0.7,
                 child: Stack(
                   children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 30),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          "assets/images/logo.svg",
+                          height: 200,
+                          width: 200,
+                        ),
+                      ),
+                    ),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
