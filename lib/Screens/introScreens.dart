@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:learninghub/Const/Constants.dart';
-
-import '../BottomNav.dart';
+import 'package:learninghub/Widgets/newBottomNav.dart';
 
 class IntroScreens extends StatefulWidget {
   // const IntroScreens({Key? key}) : super(key: key);
@@ -17,7 +16,8 @@ class _IntroScreensState extends State<IntroScreens> {
   final introKey = GlobalKey<IntroductionScreenState>();
   void _onIntroEnd(context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => BottomNav()),
+      // MaterialPageRoute(builder: (_) => BottomNav()),
+      MaterialPageRoute(builder: (_) => newBottom()),
     );
   }
 

@@ -12,6 +12,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(0.01),
+        child: AppBar(
+          brightness: Brightness.dark,
+          backgroundColor: BlckColor,
+        ),
+      ),
       body: Stack(
         children: [
           Container(
@@ -326,6 +333,30 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   ),
                 )
               ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 5, top: 5),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Icon(
+                        Icons.arrow_back_ios_outlined,
+                        color: Colors.black,
+                        size: 13,
+                      ),
+                    )),
+              ),
             ),
           )
         ],

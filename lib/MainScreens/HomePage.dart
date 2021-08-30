@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Screens/SingleSubject.dart';
 import 'package:learninghub/Widgets/Drawer.dart';
+import 'package:learninghub/Widgets/test.dart';
 
 class HomePage extends StatefulWidget {
   // const HomePage({Key? key}) : super(key: key);
@@ -12,15 +14,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // final zoomDrawerController;
-  // HomePage(this.zoomDrawerController);
   String dropdownValue;
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return Scaffold(
-      key: scaffoldKey,
+      key: scaffoldKey, extendBody: true,
+
+      // drawer: NewDrawer(),
       drawer: DrawerWidget(),
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -32,18 +36,10 @@ class _HomePageState extends State<HomePage> {
             // ),
             GestureDetector(
               onTap: () => scaffoldKey.currentState.openDrawer(),
-              child: Container(
+              child: Image(
+                image: AssetImage("assets/images/Menu.png"),
                 height: 32,
                 width: 32,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(2),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: Icon(
-                  Icons.grid_view,
-                  color: buttonGreen,
-                  size: 15,
-                ),
               ),
             ),
             SizedBox(
@@ -60,32 +56,40 @@ class _HomePageState extends State<HomePage> {
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: buttonGreen,
-                  ),
-                  borderRadius: BorderRadius.circular(4)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.circle,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => test()),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
                       color: buttonGreen,
-                      size: 15,
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "Classes",
-                      style: TextStyle(
-                          color: buttonGreen,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600),
-                    )
-                  ],
+                    borderRadius: BorderRadius.circular(4)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.circle,
+                        color: buttonGreen,
+                        size: 15,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "Classes",
+                        style: TextStyle(
+                            color: buttonGreen,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

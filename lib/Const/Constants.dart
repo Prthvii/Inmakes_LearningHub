@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 final BlckColor = Color(0xff002333);
+final greyClr = Color(0xffC2C2C2);
 final liteBlack = Color(0xff13394A);
 final buttonGreen = Color(0xff00C458);
 final BlckTxtClr = Color(0xff446270);
