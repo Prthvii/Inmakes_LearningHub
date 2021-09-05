@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'Screens/EnterNum.dart';
+import 'Screens/SplashScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Gilory'),
-      // home: newBottom(),
-      home: EnterNum(),
+      // home: EnterDetails(),
+      home: SplashScreen(),
     );
   }
 }

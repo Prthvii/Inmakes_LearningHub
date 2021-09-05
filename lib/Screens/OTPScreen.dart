@@ -1,9 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:learninghub/API/sendOTP.dart';
+import 'package:learninghub/API/verifyOtp.dart';
 import 'package:learninghub/Const/Constants.dart';
+import 'package:learninghub/Helper/sharedPref.dart';
+import 'package:learninghub/Helper/snackbar_toast_helper.dart';
+import 'package:learninghub/MainScreens/HomePage.dart';
 import 'package:learninghub/Screens/EnterDetails.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:timer_button/timer_button.dart';
 
 class OTPScreen extends StatefulWidget {
   final mob;
@@ -15,11 +21,20 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  final _otpController = TextEditingController();
-
+  TextEditingController otpController = new TextEditingController();
+  bool isTap = false;
+  bool otpFail = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(1.0),
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+        ),
+      ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -98,14 +113,45 @@ class _OTPScreenState extends State<OTPScreen> {
                             OTP(),
                             Button(),
                             SizedBox(
-                              height: 10,
+                              height: 5,
                             ),
-                            Text(
-                              "Resend after 28s",
-                              style: TextStyle(
-                                  color: Color(0xff446270),
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500),
+                            Row(
+                              children: [
+                                Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30),
+                                  child: SizedBox(
+                                    height: 30,
+                                    child: TimerButton(
+                                      label: "Resend OTP",
+                                      color: BlckColor,
+                                      // resetTimerOnPressed: true,
+                                      buttonType: ButtonType.FlatButton,
+                                      timeOutInSeconds: 30,
+                                      onPressed: () async {
+                                        print("resend");
+                                        var rsp = await sendOtpApi(
+                                            widget.mob.toString());
+                                        print("rsp['attributes']");
+                                        if (rsp['attributes']['message']
+                                                .toString() ==
+                                            "Success") {
+                                          showToastSuccess("OTP Resented!");
+                                        }
+                                      },
+                                      disabledColor: Colors.red,
+                                      // color: BlckColor,
+                                      disabledTextStyle: new TextStyle(
+                                          fontSize: 12.0, color: Colors.grey),
+                                      activeTextStyle: new TextStyle(
+                                        fontSize: 12.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             )
                           ],
                         ),
@@ -164,7 +210,7 @@ class _OTPScreenState extends State<OTPScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Text(
-            "Resend OTP",
+            "Continue",
             style: TextStyle(
                 fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
           ),
@@ -178,10 +224,6 @@ class _OTPScreenState extends State<OTPScreen> {
       margin: EdgeInsets.symmetric(horizontal: 32),
       child: PinCodeTextField(
         appContext: context,
-        // pastedTextStyle: TextStyle(
-        //   color: Colors.green.shade600,
-        //   fontWeight: FontWeight.bold,
-        // ),
         length: 6,
         autoDisposeControllers: false,
         blinkWhenObscuring: true,
@@ -200,14 +242,54 @@ class _OTPScreenState extends State<OTPScreen> {
           fieldHeight: 45,
           fieldWidth: 45,
         ),
-        cursorColor: Colors.black,
+        cursorColor: Colors.white,
         animationDuration: Duration(milliseconds: 300),
         enableActiveFill: true,
         // controller: _otpController,
         keyboardType: TextInputType.number,
-        controller: _otpController,
-        onCompleted: (v) {
-          print("Completed");
+        textStyle: TextStyle(color: Colors.white, fontSize: 16),
+        controller: otpController,
+        onCompleted: (v) async {
+          setState(() {
+            isTap = true;
+            otpFail = false;
+          });
+          var rsp =
+              await verifyOtpApi(widget.mob.toString(), otpController.text);
+          print("rsp['attributes']");
+          print(rsp);
+          if (rsp['attributes']['status'].toString() == "Success") {
+            if (rsp['attributes']['newStudent'].toString() == "old") {
+              var id =
+                  await setSharedPrefrence(ID, rsp['attributes']['studentId']);
+              var token = await setSharedPrefrence(
+                  TOKEN, rsp['attributes']['accessToken']);
+              // print("ID & Token = " + id + " - " + token);
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            } else {
+              print("new user");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EnterDetails(
+                          mob: widget.mob.toString(),
+                        )),
+              );
+            }
+          } else if (rsp['attributes']['response'].toString() ==
+              "Verification failed.") {
+            showToastSuccess("Invalid OTP!");
+            setState(() {
+              otpFail = true;
+            });
+          }
+          setState(() {
+            isTap = false;
+          });
         },
         onChanged: (value) {},
         beforeTextPaste: (text) {

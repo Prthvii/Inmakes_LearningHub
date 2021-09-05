@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:learninghub/API/sendOTP.dart';
 import 'package:learninghub/Const/Constants.dart';
-import 'package:learninghub/Screens/OTPScreen.dart';
+import 'package:learninghub/Helper/snackbar_toast_helper.dart';
+
+import 'OTPScreen.dart';
 
 class EnterNum extends StatefulWidget {
   const EnterNum({key}) : super(key: key);
@@ -12,11 +16,32 @@ class EnterNum extends StatefulWidget {
 }
 
 class _EnterNumState extends State<EnterNum> {
-  final mobController = TextEditingController();
+  bool isTap = false;
+
+  final numController = TextEditingController();
+  void enableTap() {
+    setState(() {
+      isTap = true;
+    });
+  }
+
+  void disableTap() {
+    setState(() {
+      isTap = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(1.0),
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+        ),
+      ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -129,11 +154,11 @@ class _EnterNumState extends State<EnterNum> {
                 child: TextFormField(
                   cursorColor: Colors.white12,
                   keyboardType: TextInputType.phone,
-                  controller: mobController,
+                  controller: numController,
                   autofocus: false,
                   inputFormatters: [LengthLimitingTextInputFormatter(10)],
                   style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.w500),
                   decoration: new InputDecoration(
@@ -159,30 +184,67 @@ class _EnterNumState extends State<EnterNum> {
 
   Widget Button() {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  OTPScreen(mob: mobController.text.toString())),
-        );
+      onTap: () async {
+        var phone = numController.text.toString();
+        if (phone.isNotEmpty && phone.length == 10) {
+          enableTap();
+          var rsp = await sendOtpApi(numController.text.toString());
+          print("rsp['attributes']");
+          if (rsp['attributes']['message'].toString() == "Success") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      OTPScreen(mob: numController.text.toString())),
+            );
+          }
+          disableTap();
+        } else {
+          showToastSuccess("Enter your valid phone number.");
+        }
       },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 32),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.white10),
-            borderRadius: BorderRadius.circular(4),
-            color: buttonGreen),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Text(
-            "Continue",
-            style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
-          ),
-        ),
-      ),
+      child: numController.text.toString().length <= 9
+          ? Container(
+              margin: EdgeInsets.symmetric(horizontal: 32),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white10),
+                  borderRadius: BorderRadius.circular(4),
+                  color: Colors.grey),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  "Continue",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
+                ),
+              ),
+            )
+          : isTap == true
+              ? SpinKitHourGlass(
+                  color: buttonGreen,
+                  size: 20,
+                )
+              : Container(
+                  margin: EdgeInsets.symmetric(horizontal: 32),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white10),
+                      borderRadius: BorderRadius.circular(4),
+                      color: buttonGreen),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      "Continue",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
     );
   }
 }

@@ -1,19 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:learninghub/API/signupUser.dart';
 import 'package:learninghub/Const/Constants.dart';
-import 'package:learninghub/Screens/schoolBoradSelect.dart';
+import 'package:learninghub/Helper/snackbar_toast_helper.dart';
 
 class EnterDetails extends StatefulWidget {
-  const EnterDetails({key}) : super(key: key);
+  final mob;
+  EnterDetails({this.mob});
 
   @override
   _EnterDetailsState createState() => _EnterDetailsState();
 }
 
 class _EnterDetailsState extends State<EnterDetails> {
-  String dropdownValue;
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController pinController = new TextEditingController();
 
+  String dropdownValue;
+  bool isTap = false;
+  int textLength = 0;
+  void enableTap() {
+    setState(() {
+      isTap = true;
+    });
+  }
+
+  void disableTap() {
+    setState(() {
+      isTap = false;
+    });
+  }
+
+  List<String> statesList = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,22 +92,12 @@ class _EnterDetailsState extends State<EnterDetails> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "Enter your mobile number",
+                              "Student Details",
                               style: TextStyle(
                                   fontSize: 20,
                                   color: BlckColor,
                                   fontWeight: FontWeight.w600),
                             ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "We will send you an OTP to verify.",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xff9F9F9F),
-                                  fontWeight: FontWeight.w500),
-                            )
                           ],
                         ),
                       ),
@@ -95,11 +134,39 @@ class _EnterDetailsState extends State<EnterDetails> {
 
   Widget Button() {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SelectSchoolBoard()),
-        );
+      onTap: () async {
+        var name = nameController.text.toString();
+        var email = emailController.text.toString();
+        var pin = pinController.text.toString();
+        if (name.isNotEmpty && email.isNotEmpty && pin.isNotEmpty) {
+          enableTap();
+          var rsp = await signUpApi(widget.mob.toString(), nameController.text,
+              emailController.text, dropdownValue, pinController);
+          print("rsp['attributes']");
+          print("--------------------------------------");
+          print(name + ", " + dropdownValue + ", " + pin + ", " + email);
+          print("--------------------------------------");
+
+          print(rsp);
+          // if (rsp['attributes']['status'].toString() == "Success") {
+          //   var id = await setSharedPrefrence(
+          //       ID, rsp['attributes']['data']['studentId']);
+          //   var token = await setSharedPrefrence(
+          //       TOKEN, rsp['attributes']['data']['accessToken']);
+          //
+          //   showToastSuccess("Account Created!");
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => SelectSchoolBoard()),
+          //   );
+          // }
+          disableTap();
+        } else {
+          showToastSuccess("Oops! Something's wrong. Fill all fields above.");
+        }
+        setState(() {
+          isTap = false;
+        });
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 32, vertical: 10),
@@ -107,7 +174,11 @@ class _EnterDetailsState extends State<EnterDetails> {
         decoration: BoxDecoration(
             border: Border.all(color: Colors.white10),
             borderRadius: BorderRadius.circular(4),
-            color: buttonGreen),
+            color: nameController.text.isEmpty ||
+                    emailController.text.isEmpty ||
+                    pinController.text.isEmpty
+                ? Colors.grey
+                : buttonGreen),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Text(
@@ -134,8 +205,7 @@ class _EnterDetailsState extends State<EnterDetails> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: TextFormField(
             cursorColor: Colors.white12,
-            keyboardType: TextInputType.phone,
-            // controller: mobController,
+            controller: nameController,
             autofocus: false,
             // inputFormatters: [LengthLimitingTextInputFormatter(10)],
             style: TextStyle(
@@ -143,7 +213,7 @@ class _EnterDetailsState extends State<EnterDetails> {
             decoration: new InputDecoration(
               border: InputBorder.none,
               hintStyle: blckTextStyle,
-              hintText: "Mobile Number",
+              hintText: "Full Name",
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
               errorBorder: InputBorder.none,
@@ -170,9 +240,11 @@ class _EnterDetailsState extends State<EnterDetails> {
           child: TextFormField(
             cursorColor: Colors.white12,
             keyboardType: TextInputType.phone,
-            // controller: mobController,
+            controller: pinController,
             autofocus: false,
-            // inputFormatters: [LengthLimitingTextInputFormatter(10)],
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(6),
+            ],
             style: TextStyle(
                 fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
             decoration: new InputDecoration(
@@ -204,8 +276,8 @@ class _EnterDetailsState extends State<EnterDetails> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: TextFormField(
             cursorColor: Colors.white12,
-            keyboardType: TextInputType.phone,
-            // controller: mobController,
+            keyboardType: TextInputType.emailAddress,
+            controller: emailController,
             autofocus: false,
             // inputFormatters: [LengthLimitingTextInputFormatter(10)],
             style: TextStyle(
@@ -239,7 +311,10 @@ class _EnterDetailsState extends State<EnterDetails> {
         child: DropdownButton<String>(
           value: dropdownValue,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+          icon: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: Colors.white,
+          ),
           iconSize: 24,
           elevation: 16,
           dropdownColor: liteBlack,
@@ -260,11 +335,18 @@ class _EnterDetailsState extends State<EnterDetails> {
               dropdownValue = newValue;
             });
           },
-          items: <String>['One', 'Two', 'Free', 'Four']
-              .map<DropdownMenuItem<String>>((String value) {
+          items: statesList.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              onTap: () {
+                setState(() {
+                  dropdownValue = value.toString();
+                });
+              },
+              child: Text(
+                value,
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
             );
           }).toList(),
         ),
