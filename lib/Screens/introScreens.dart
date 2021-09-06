@@ -13,10 +13,14 @@ class IntroScreens extends StatefulWidget {
 }
 
 class _IntroScreensState extends State<IntroScreens> {
+  var isLoading = true;
+  var arrIntroImages = [];
+  var arrImages = [];
+  List<String> img = [];
+
   final introKey = GlobalKey<IntroductionScreenState>();
   void _onIntroEnd(context) {
     Navigator.of(context).push(
-      // MaterialPageRoute(builder: (_) => BottomNav()),
       MaterialPageRoute(builder: (_) => newBottom()),
     );
   }
@@ -29,10 +33,6 @@ class _IntroScreensState extends State<IntroScreens> {
       width: double.infinity,
       alignment: Alignment.center,
     );
-  }
-
-  Widget _buildImage(String assetName, [double width = 350]) {
-    return Image.asset('assets/$assetName', width: width);
   }
 
   @override
@@ -61,91 +61,82 @@ class _IntroScreensState extends State<IntroScreens> {
         elevation: 0,
       ),
       body: IntroductionScreen(
-        key: introKey,
+        key: introKey, animationDuration: 3,
         globalBackgroundColor: Colors.white,
         dotsDecorator: DotsDecorator(
-            size: const Size.square(1.0),
-            activeSize: const Size(1.0, 1.0),
-            activeColor: Colors.white,
-            color: Colors.white,
-            spacing: const EdgeInsets.symmetric(horizontal: 0.0),
+            size: const Size.square(5.0),
+            activeSize: const Size(10.0, 10.0),
+            activeColor: Colors.black,
+            color: Colors.black38,
+            spacing: const EdgeInsets.symmetric(horizontal: 5.0),
             activeShape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0.0))),
-        // globalFooter: GestureDetector(
-        //   onTap: () {},
-        //   child: Container(
-        //       height: 56,
-        //       width: 56,
-        //       decoration: BoxDecoration(
-        //           color: buttonGreen, borderRadius: BorderRadius.circular(5)),
-        //       child: const Icon(
-        //         Icons.arrow_forward,
-        //         color: Colors.white,
-        //       )),
-        // ),
+                borderRadius: BorderRadius.circular(10.0))),
         pages: [
           PageViewModel(
-            title: "Fractional shares",
-            body:
-                "Instead of having to buy an entire share, invest any amount you want.",
-            image: Image.network(
-              "https://wallpapercave.com/wp/wp2722822.jpg",
-              fit: BoxFit.cover,
-            ),
+            bodyWidget: Image.asset("assets/images/Intro/intro1.jpg"),
+            titleWidget: Text(""),
             decoration: pageDecoration,
           ),
           PageViewModel(
-            title: "Learn as you go",
-            body:
-                "Download the Stockpile app and master the market with our mini-lesson.",
-            image: Image.network("https://wallpapercave.com/wp/wp2722822.jpg"),
-            decoration: pageDecoration,
+            bodyWidget: Image.asset("assets/images/Intro/intro2.jpg"),
+            titleWidget: Text(""),
           ),
           PageViewModel(
-            title: "Kids and teens",
-            body:
-                "Kids and teens can track their stocks 24/7 and place trades that you approve.",
-            image: Image.network("https://wallpapercave.com/wp/wp2722822.jpg"),
-            decoration: pageDecoration,
-          ),
-          PageViewModel(
-            title: "Full Screen Page",
-            body:
-                "Pages can be full screen as well.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id euismod lectus, non tempor felis. Nam rutrum rhoncus est ac venenatis.",
-            image: Image.network("https://wallpapercave.com/wp/wp2722822.jpg"),
-            decoration: pageDecoration.copyWith(
-              contentMargin: const EdgeInsets.symmetric(horizontal: 16),
-              // fullScreen: true,
-              bodyFlex: 2,
-              imageFlex: 3,
-            ),
-          ),
-          PageViewModel(
-            title: "Another title page",
-            body: "Another beautiful body text for this example onboarding",
-            image: Image.network("https://wallpapercave.com/wp/wp2722822.jpg"),
-            decoration: pageDecoration,
+            bodyWidget: Image.asset("assets/images/Intro/intro3.jpg"),
+            titleWidget: Text(""),
           ),
         ],
         onDone: () => _onIntroEnd(context),
-        showSkipButton: false,
+        showSkipButton: true,
+        skip: Text(
+          "Skip",
+          style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w500),
+        ),
         skipFlex: 0, isProgressTap: true,
         nextFlex: 0, isProgress: true,
         //rtl: true, // Display as right-to-left
         next: Container(
-            height: 56,
-            width: 56,
-            decoration: BoxDecoration(
-                color: buttonGreen, borderRadius: BorderRadius.circular(5)),
-            child: const Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-            )),
-        done: const Text('Done',
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-                color: Colors.black)),
+          width: 100,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: BlckColor, borderRadius: BorderRadius.circular(5)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const Text('Next',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                    color: Colors.white)),
+          ),
+        ),
+        done: Container(
+          width: 100,
+          decoration: BoxDecoration(
+              color: buttonGreen, borderRadius: BorderRadius.circular(5)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: const Text('Get Started',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                          color: Colors.white)),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 13,
+                )
+              ],
+            ),
+          ),
+        ),
         curve: Curves.fastLinearToSlowEaseIn,
         controlsMargin: const EdgeInsets.all(16),
         controlsPadding: kIsWeb

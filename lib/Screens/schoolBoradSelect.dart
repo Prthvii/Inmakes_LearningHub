@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:learninghub/API/SelectBoardApi.dart';
+import 'package:learninghub/API/SelectCourseApi.dart';
 import 'package:learninghub/Const/Constants.dart';
 
 import 'introScreens.dart';
@@ -10,8 +12,72 @@ class SelectSchoolBoard extends StatefulWidget {
 }
 
 class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
+  var arrBoardName = [];
+  var arrBoardId = "";
+  List<String> arrBoardList = [];
+
+  var arrCourseName = [];
+  List<String> arrCourse = [];
+
+  var isLoading = true;
+
   String BoardDropdownValue;
   String ClassDropdownValue;
+  @override
+  void initState() {
+    super.initState();
+
+    print("xoxoxo");
+    this.BoardSlct();
+    setState(() {});
+  }
+
+  Future<String> BoardSlct() async {
+    var rsp = await SelectBoardApi();
+    if (rsp['attributes']['status'].toString() == "Success") {
+      setState(() {
+        arrBoardName = rsp["attributes"]["schoolBoards"];
+        if (arrBoardName != null) {
+          for (var value in arrBoardName) {
+            final board = value["boardName"].toString();
+            // final boardID = value["boardId"].toString();
+            // arrBoardId.add(boardID);
+            arrBoardList.add(board);
+          }
+          // boardId =
+        }
+      });
+    }
+    setState(() {
+      isLoading = false;
+    });
+    return "0";
+  }
+
+  Future<String> CourseSlt() async {
+    var rsp = await SlctCourseApi(arrBoardId.toString());
+    print(rsp);
+    if (rsp['attributes']['status'].toString() == "Success") {
+      setState(() {
+        arrCourseName = rsp["attributes"]["courses"];
+        if (arrCourseName != null) {
+          for (var value in arrCourseName) {
+            final Course = value["courseName"].toString();
+            // print(
+            //     "``````````````````````````arrBoardName``````````````````````````");
+            arrCourse.add(Course);
+            // print(arrCourse);
+            //
+            // print("``````````````````````arrBoardName``````````````````````");
+          }
+        }
+      });
+    }
+    setState(() {
+      isLoading = false;
+    });
+    return "0";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +134,7 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
                   child: Wrap(
                     alignment: WrapAlignment.center,
                     runSpacing: 10,
-                    children: [SelectBoard(), SelectClass(), Button()],
+                    children: [SelectBoard(), SelectCourse(), Button()],
                   ),
                 ),
               )
@@ -93,7 +159,10 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
         child: DropdownButton<String>(
           value: BoardDropdownValue,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+          icon: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: Colors.white54,
+          ),
           iconSize: 24,
           elevation: 16,
           dropdownColor: liteBlack,
@@ -103,9 +172,7 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
           ),
           underline: Container(),
           style: const TextStyle(
-            color: Color(
-              0xff446270,
-            ),
+            color: Colors.white,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -114,10 +181,19 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
               BoardDropdownValue = newValue;
             });
           },
-          items: <String>['CBSE', 'STATE', 'ICSE']
-              .map<DropdownMenuItem<String>>((String value) {
+          items: arrBoardList.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
+              onTap: () {
+                print("arrBoardName");
+                print(arrBoardName);
+                setState(() {
+                  BoardDropdownValue = value.toString();
+                  arrBoardId = arrBoardName[0]["boardId"].toString();
+                  print(arrBoardId);
+                  CourseSlt();
+                });
+              },
               child: Text(value),
             );
           }).toList(),
@@ -126,7 +202,7 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
     );
   }
 
-  Widget SelectClass() {
+  Widget SelectCourse() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 32),
       height: 51,
@@ -140,19 +216,20 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
         child: DropdownButton<String>(
           value: ClassDropdownValue,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+          icon: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: Colors.white54,
+          ),
           iconSize: 24,
           elevation: 16,
           dropdownColor: liteBlack,
           hint: Text(
-            'Select Class',
+            'Select Course',
             style: blckTextStyle,
           ),
           underline: Container(),
           style: const TextStyle(
-            color: Color(
-              0xff446270,
-            ),
+            color: Colors.white,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -161,10 +238,12 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
               ClassDropdownValue = newValue;
             });
           },
-          items: <String>['One', 'Two', 'Three', 'Four']
-              .map<DropdownMenuItem<String>>((String value) {
+          items: arrCourse.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
+              onTap: () {
+                ClassDropdownValue = value.toString();
+              },
               child: Text(value),
             );
           }).toList(),

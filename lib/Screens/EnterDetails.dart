@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/API/signupUser.dart';
 import 'package:learninghub/Const/Constants.dart';
+import 'package:learninghub/Helper/sharedPref.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
+import 'package:learninghub/Screens/schoolBoradSelect.dart';
 
 class EnterDetails extends StatefulWidget {
   final mob;
@@ -142,24 +144,25 @@ class _EnterDetailsState extends State<EnterDetails> {
           enableTap();
           var rsp = await signUpApi(widget.mob.toString(), nameController.text,
               emailController.text, dropdownValue, pinController);
-          print("rsp['attributes']");
+
           print("--------------------------------------");
           print(name + ", " + dropdownValue + ", " + pin + ", " + email);
           print("--------------------------------------");
 
           print(rsp);
-          // if (rsp['attributes']['status'].toString() == "Success") {
-          //   var id = await setSharedPrefrence(
-          //       ID, rsp['attributes']['data']['studentId']);
-          //   var token = await setSharedPrefrence(
-          //       TOKEN, rsp['attributes']['data']['accessToken']);
-          //
-          //   showToastSuccess("Account Created!");
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => SelectSchoolBoard()),
-          //   );
-          // }
+          if (rsp['attributes']['status'].toString() == "Success") {
+            var id = await setSharedPrefrence(
+                ID, rsp['attributes']['data'][0]['studentId']);
+            var token = await setSharedPrefrence(
+                TOKEN, rsp['attributes']['data'][0]['accessToken']);
+            print(id);
+            print(token);
+            showToastSuccess("Account Created!");
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SelectSchoolBoard()),
+            );
+          }
           disableTap();
         } else {
           showToastSuccess("Oops! Something's wrong. Fill all fields above.");
