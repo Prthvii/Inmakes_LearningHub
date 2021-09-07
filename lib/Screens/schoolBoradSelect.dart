@@ -14,8 +14,8 @@ class SelectSchoolBoard extends StatefulWidget {
 class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
   var arrBoardName = [];
   var arrBoardId = "";
-  List<String> arrBoardList = [];
-
+ // List<String> arrBoardList = List();
+  List arrBoardList = List();
   var arrCourseName = [];
   List<String> arrCourse = [];
 
@@ -40,9 +40,10 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
         if (arrBoardName != null) {
           for (var value in arrBoardName) {
             final board = value["boardName"].toString();
-            // final boardID = value["boardId"].toString();
-            // arrBoardId.add(boardID);
-            arrBoardList.add(board);
+            final id = value["boardId"].toString();
+
+            arrBoardList.add([id, board]);
+
             print(arrBoardList);
           }
           // boardId =
@@ -55,8 +56,12 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
     return "0";
   }
 
-  Future<String> CourseSlt() async {
-    var rsp = await SlctCourseApi(arrBoardId.toString());
+  Future<String> CourseSlt(id) async {
+    setState(() {
+      arrCourse.clear();
+    });
+    var rsp = await SlctCourseApi(id.toString());
+    print("Coursee");
     print(rsp);
     if (rsp['attributes']['status'].toString() == "Success") {
       setState(() {
@@ -64,9 +69,12 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
         if (arrCourseName != null) {
           for (var value in arrCourseName) {
             final Course = value["courseName"].toString();
+            setState(() {
+              arrCourse.add(Course);
+            });
             // print(
             //     "``````````````````````````arrBoardName``````````````````````````");
-            arrCourse.add(Course);
+
             // print(arrCourse);
             //
             // print("``````````````````````arrBoardName``````````````````````");
@@ -178,25 +186,21 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
             fontWeight: FontWeight.w500,
           ),
           onChanged: (String newValue) async {
-            arrCourse.clear();
-            setState(() {
-              BoardDropdownValue = newValue;
-              arrBoardId = arrBoardName[0]["boardId"].toString();
-              print(arrBoardId);
-            });
+          //  arrCourse.clear();
+
           },
-          items: arrBoardList.map<DropdownMenuItem<String>>((String value) {
+          items: arrBoardList.map<DropdownMenuItem<String>>(( value) {
             return DropdownMenuItem<String>(
-              value: value,
+              value: value[0],
               onTap: () async {
                 setState(() {
-                  BoardDropdownValue = value.toString();
+                  BoardDropdownValue = value[0].toString();
                   // arrBoardId = arrBoardName[0]["boardId"].toString();
                   // print(arrBoardId);
-                  // CourseSlt();
+                   CourseSlt(BoardDropdownValue);
                 });
               },
-              child: Text(value),
+              child: Text(value[1].toString()),
             );
           }).toList(),
         ),
