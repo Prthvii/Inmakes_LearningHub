@@ -43,6 +43,7 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
             // final boardID = value["boardId"].toString();
             // arrBoardId.add(boardID);
             arrBoardList.add(board);
+            print(arrBoardList);
           }
           // boardId =
         }
@@ -176,22 +177,23 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
-          onChanged: (String newValue) {
+          onChanged: (String newValue) async {
+            arrCourse.clear();
             setState(() {
               BoardDropdownValue = newValue;
+              arrBoardId = arrBoardName[0]["boardId"].toString();
+              print(arrBoardId);
             });
           },
           items: arrBoardList.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              onTap: () {
-                print("arrBoardName");
-                print(arrBoardName);
+              onTap: () async {
                 setState(() {
                   BoardDropdownValue = value.toString();
-                  arrBoardId = arrBoardName[0]["boardId"].toString();
-                  print(arrBoardId);
-                  CourseSlt();
+                  // arrBoardId = arrBoardName[0]["boardId"].toString();
+                  // print(arrBoardId);
+                  // CourseSlt();
                 });
               },
               child: Text(value),
