@@ -194,11 +194,49 @@ class _OTPScreenState extends State<OTPScreen> {
 
   Widget Button() {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => EnterDetails()),
-        );
+      onTap: () async {
+        setState(() {
+          isTap = true;
+          otpFail = false;
+        });
+        var rsp = await verifyOtpApi(widget.mob.toString(), otpController.text);
+        print("rsp['attributes']");
+        print(rsp);
+        if (rsp['attributes']['status'].toString() == "Success") {
+          if (rsp['attributes']['newStudent'].toString() == "old") {
+            print("id");
+            print(rsp['attributes']["studentInfo"][0]['studentId']);
+            print("token");
+            print(rsp['attributes']['studentInfo'][0]['accessToken']);
+            var id = await setSharedPrefrence(ID,
+                rsp['attributes']["studentInfo"][0]['studentId'].toString());
+            var token = await setSharedPrefrence(TOKEN,
+                rsp['attributes']['studentInfo'][0]['accessToken'].toString());
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          } else {
+            print("new user");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EnterDetails(
+                        mob: widget.mob.toString(),
+                      )),
+            );
+          }
+        } else if (rsp['attributes']['response'].toString() ==
+            "Verification failed.") {
+          showToastSuccess("Invalid OTP!");
+          setState(() {
+            otpFail = true;
+          });
+        }
+        setState(() {
+          isTap = false;
+        });
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 32),
@@ -260,11 +298,16 @@ class _OTPScreenState extends State<OTPScreen> {
           print(rsp);
           if (rsp['attributes']['status'].toString() == "Success") {
             if (rsp['attributes']['newStudent'].toString() == "old") {
-              var id =
-                  await setSharedPrefrence(ID, rsp['attributes']['studentId']);
+              print("id");
+              print(rsp['attributes']["studentInfo"][0]['studentId']);
+              print("token");
+              print(rsp['attributes']['studentInfo'][0]['accessToken']);
+              var id = await setSharedPrefrence(ID,
+                  rsp['attributes']["studentInfo"][0]['studentId'].toString());
               var token = await setSharedPrefrence(
-                  TOKEN, rsp['attributes']['accessToken']);
-              // print("ID & Token = " + id + " - " + token);
+                  TOKEN,
+                  rsp['attributes']['studentInfo'][0]['accessToken']
+                      .toString());
 
               Navigator.pushReplacement(
                 context,

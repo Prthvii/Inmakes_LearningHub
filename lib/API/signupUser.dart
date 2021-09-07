@@ -9,13 +9,13 @@ Future signUpApi(num, name, email, state, pin) async {
     'type': reg,
     'secKey': secKey,
     'mobileNumber': num.toString(),
-    'countryCode': countryCode,
     'fullName': name.toString(),
     'emailId': email.toString(),
-    'devicePlatform': " ",
+    'devicePlatform': "android",
     'referralCode': "",
-    'centerId': "Android",
+    'centerId': "1",
     'deviceName': "Huwai",
+    'deviceModel': "p30",
     'appVersion': "1.0.0",
   };
 

@@ -151,8 +151,9 @@ class _EnterDetailsState extends State<EnterDetails> {
 
           print(rsp);
           if (rsp['attributes']['status'].toString() == "Success") {
+            print(rsp['attributes']['data'][0]['studentId']);
             var id = await setSharedPrefrence(
-                ID, rsp['attributes']['data'][0]['studentId']);
+                ID, rsp['attributes']['data'][0]['studentId'].toString());
             var token = await setSharedPrefrence(
                 TOKEN, rsp['attributes']['data'][0]['accessToken']);
             print(id);
