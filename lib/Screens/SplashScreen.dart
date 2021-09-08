@@ -6,7 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/sharedPref.dart';
-import 'package:learninghub/MainScreens/HomePage.dart';
+import 'package:learninghub/Widgets/newBottomNav.dart';
 
 import 'EnterNum.dart';
 
@@ -55,14 +55,12 @@ class _SplashScreenState extends State<SplashScreen> {
     print("tokennnn");
     print(token);
     return Timer(
-        // Duration(seconds: 4), token != null ? navigationHome : navigationLogin);
-        Duration(seconds: 4),
-        navigationLogin);
+        Duration(seconds: 4), token != null ? navigationHome : navigationLogin);
   }
 
   void navigationHome() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
+        context, MaterialPageRoute(builder: (context) => newBottom()));
   }
 
   void navigationLogin() {

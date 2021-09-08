@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/API/SelectBoardApi.dart';
 import 'package:learninghub/API/SelectCourseApi.dart';
+import 'package:learninghub/API/activateAccount.dart';
 import 'package:learninghub/Const/Constants.dart';
-
-import 'introScreens.dart';
+import 'package:learninghub/Helper/sharedPref.dart';
+import 'package:learninghub/Helper/snackbar_toast_helper.dart';
+import 'package:learninghub/Screens/introScreens.dart';
 
 class SelectSchoolBoard extends StatefulWidget {
   @override
@@ -14,10 +16,10 @@ class SelectSchoolBoard extends StatefulWidget {
 class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
   var arrBoardName = [];
   var arrBoardId = "";
- // List<String> arrBoardList = List();
+  // List<String> arrBoardList = List();
   List arrBoardList = List();
   var arrCourseName = [];
-  List<String> arrCourse = [];
+  List arrCourse = List();
 
   var isLoading = true;
 
@@ -44,6 +46,7 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
 
             arrBoardList.add([id, board]);
 
+            print("````````````arrBoardList````````````");
             print(arrBoardList);
           }
           // boardId =
@@ -69,15 +72,8 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
         if (arrCourseName != null) {
           for (var value in arrCourseName) {
             final Course = value["courseName"].toString();
-            setState(() {
-              arrCourse.add(Course);
-            });
-            // print(
-            //     "``````````````````````````arrBoardName``````````````````````````");
-
-            // print(arrCourse);
-            //
-            // print("``````````````````````arrBoardName``````````````````````");
+            final Cid = value["id"].toString();
+            arrCourse.add([Cid, Course]);
           }
         }
       });
@@ -186,10 +182,9 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
             fontWeight: FontWeight.w500,
           ),
           onChanged: (String newValue) async {
-          //  arrCourse.clear();
-
+            //  arrCourse.clear();
           },
-          items: arrBoardList.map<DropdownMenuItem<String>>(( value) {
+          items: arrBoardList.map<DropdownMenuItem<String>>((value) {
             return DropdownMenuItem<String>(
               value: value[0],
               onTap: () async {
@@ -197,7 +192,7 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
                   BoardDropdownValue = value[0].toString();
                   // arrBoardId = arrBoardName[0]["boardId"].toString();
                   // print(arrBoardId);
-                   CourseSlt(BoardDropdownValue);
+                  CourseSlt(BoardDropdownValue);
                 });
               },
               child: Text(value[1].toString()),
@@ -240,17 +235,20 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
             fontWeight: FontWeight.w500,
           ),
           onChanged: (String newValue) {
-            setState(() {
-              ClassDropdownValue = newValue;
-            });
+            // setState(() {
+            //   ClassDropdownValue = newValue;
+            // });
           },
-          items: arrCourse.map<DropdownMenuItem<String>>((String value) {
+          items: arrCourse.map<DropdownMenuItem<String>>((value) {
             return DropdownMenuItem<String>(
-              value: value,
-              onTap: () {
-                ClassDropdownValue = value.toString();
+              value: value[0],
+              onTap: () async {
+                setState(() {
+                  ClassDropdownValue = value[0].toString();
+                  print(ClassDropdownValue);
+                });
               },
-              child: Text(value),
+              child: Text(value[1].toString()),
             );
           }).toList(),
         ),
@@ -260,11 +258,27 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
 
   Widget Button() {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => IntroScreens()),
+      onTap: () async {
+        var rsp = await ActivateAccountApi(
+          ClassDropdownValue.toString(),
         );
+        print("rsp");
+        print(rsp);
+        if (rsp["attributes"]["status"].toString() == "Success") {
+          print("account activated");
+          print(ClassDropdownValue.toString());
+          var CourseID =
+              await setSharedPrefrence(CID, ClassDropdownValue.toString());
+          showToastSuccess("Account Succesfully Activated!");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    IntroScreens(cid: ClassDropdownValue.toString())),
+          );
+        } else {
+          showToastSuccess("Error occured!");
+        }
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 32, vertical: 10),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:learninghub/API/homepageAPI.dart';
 import 'package:learninghub/Const/Constants.dart';
+import 'package:learninghub/Helper/colorConverter.dart';
 import 'package:learninghub/Screens/SingleSubject.dart';
 import 'package:learninghub/Widgets/Drawer.dart';
 import 'package:learninghub/Widgets/test.dart';
@@ -14,8 +17,51 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var arrStudentInfo = [];
+  var arrSubjects = [];
+  var arrRecentVideos = [];
+  var arrCourses = [];
+  var name;
+  List arrCourseList = List();
   String dropdownValue;
+  var isLoading = true;
+
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  Future<String> getHome() async {
+    var rsp = await HomePageApi();
+    print("homepageee");
+    // print(rsp);
+    if (rsp['attributes']['status'].toString() == "Success") {
+      setState(() {
+        arrStudentInfo = rsp["attributes"]["studentInfo"];
+        name = arrStudentInfo[0]["fullName"].toString();
+        arrSubjects = rsp["attributes"]["subjects"];
+        arrRecentVideos = rsp["attributes"]["recentVideos"];
+        arrCourses = rsp["attributes"]["courses"];
+        if (arrCourses != null) {
+          for (var value in arrCourses) {
+            final Course = value["courseName"].toString();
+            arrCourseList.add(Course);
+          }
+        }
+      });
+      print(arrSubjects);
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+    return "0";
+  }
+
+  void initState() {
+    super.initState();
+
+    print("xoxoxo");
+    this.getHome();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +77,6 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
         title: Row(
           children: [
-            // SizedBox(
-            //   width: 50,
-            // ),
             GestureDetector(
               onTap: () => scaffoldKey.currentState.openDrawer(),
               child: Image(
@@ -96,30 +139,39 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              NameSection(),
-              BannerClass(),
-              SubjectsList(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                  "Recent Courses",
-                  style: Txt12Med,
+      body: isLoading == true
+          ? Center(
+              child: SpinKitFadingCube(
+              color: buttonGreen,
+              size: 20,
+            ))
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 60),
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      NameSection(),
+                      BannerClass(),
+                      SubjectsList(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          "Recent Courses",
+                          style: Txt12Med,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      RcntCr(),
+                      liveClassesList(),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 15,
-              ),
-              RcntCr(),
-              liveClassesList(),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -130,14 +182,14 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Good Morning",
+            "Hello,",
             style: Txt12Med,
           ),
           SizedBox(
             height: 5,
           ),
           Text(
-            "Aaron Taylor",
+            name.toString(),
             style: Txt24Bold,
           )
         ],
@@ -167,7 +219,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20, top: 15),
                   child: Text(
-                    "Class",
+                    "Course",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -187,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                     elevation: 16,
                     dropdownColor: liteBlack,
                     hint: Text(
-                      'Select State',
+                      'Select course',
                       style: WhiteTextStyle,
                     ),
                     underline: Container(),
@@ -201,8 +253,7 @@ class _HomePageState extends State<HomePage> {
                         dropdownValue = newValue;
                       });
                     },
-                    items: <String>['One', 'Two', 'Free', 'Four']
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items: arrCourseList.map<DropdownMenuItem<String>>((value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -229,16 +280,17 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         height: 80,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+          padding: const EdgeInsets.only(top: 20, bottom: 20, left: 15),
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             separatorBuilder: (context, index) => SizedBox(
               width: 10,
             ),
             shrinkWrap: true,
-            itemCount: 5,
+            itemCount: arrSubjects != null ? arrSubjects.length : 0,
             itemBuilder: (context, index) {
-              return subs(index);
+              final item = arrSubjects != null ? arrSubjects[index] : null;
+              return subs(item, index);
             },
           ),
         ),
@@ -246,7 +298,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  subs(int index) {
+  subs(var item, int index) {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(color: Colors.black54, width: 1),
@@ -257,14 +309,14 @@ class _HomePageState extends State<HomePage> {
           children: [
             Icon(
               Icons.circle,
-              color: buttonGreen,
-              size: 18,
+              color: hexToColor(item['bgColor'].toString()),
+              size: 15,
             ),
             SizedBox(
               width: 5,
             ),
             Text(
-              "Classes",
+              item["subjectName"].toString(),
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 13,
@@ -287,16 +339,18 @@ class _HomePageState extends State<HomePage> {
             width: 10,
           ),
           shrinkWrap: true,
-          itemCount: 5,
+          itemCount: arrRecentVideos != null ? arrRecentVideos.length : 0,
           itemBuilder: (context, index) {
-            return courses(index);
+            final item =
+                arrRecentVideos != null ? arrRecentVideos[index] : null;
+            return courses(item, index);
           },
         ),
       ),
     );
   }
 
-  courses(int index) {
+  courses(var item, int index) {
     return Stack(
       children: [
         Container(
@@ -306,7 +360,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.grey[200],
               image: DecorationImage(
                   image: NetworkImage(
-                    "https://scx2.b-cdn.net/gfx/news/hires/2019/3-quantumphysi.jpg",
+                    item["coverImage"].toString(),
                   ),
                   fit: BoxFit.cover)),
         ),
@@ -325,7 +379,9 @@ class _HomePageState extends State<HomePage> {
                     width: 5,
                   ),
                   Text(
-                    "Course Title",
+                    item["chapterName"].toString(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: Txt12Semi,
                   )
                 ],
@@ -340,17 +396,107 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 30),
       child: Container(
         height: 400,
-        child: ListView.separated(
+        child: ListView(
           scrollDirection: Axis.horizontal,
-          separatorBuilder: (context, index) => SizedBox(
-            width: 10,
-          ),
-          shrinkWrap: true,
-          itemCount: 5,
-          itemBuilder: (context, index) {
-            return LiveClassWidget(index);
-          },
+          children: [
+            Container(
+              height: 400,
+              width: MediaQuery.of(context).size.width * 0.7,
+              decoration: BoxDecoration(
+                  color: BlckColor, borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: circleClr),
+                      height: 80,
+                      width: 80,
+                    ),
+                    Text(
+                      "Inmakes live classes",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    Text(
+                      "Live classes by best teachers from LearningHub to clear your doubts and to provide individual attention",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: BlckTxtClr),
+                      textAlign: TextAlign.left,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Button()
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.01,
+            ),
+            Container(
+              height: 400,
+              width: MediaQuery.of(context).size.width * 0.7,
+              decoration: BoxDecoration(
+                  color: BlckColor, borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: circleClr),
+                      height: 80,
+                      width: 80,
+                    ),
+                    Text(
+                      "Avail free counselling",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    Text(
+                      "Live classes by best teachers from LearningHub to clear your doubts and to provide individual attention",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: BlckTxtClr),
+                      textAlign: TextAlign.left,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Button()
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
+        // child: ListView.separated(
+        //   scrollDirection: Axis.horizontal,
+        //   separatorBuilder: (context, index) => SizedBox(
+        //     width: 10,
+        //   ),
+        //   shrinkWrap: true,
+        //   itemCount: 5,
+        //   itemBuilder: (context, index) {
+        //     return LiveClassWidget(index);
+        //   },
+        // ),
       ),
     );
   }

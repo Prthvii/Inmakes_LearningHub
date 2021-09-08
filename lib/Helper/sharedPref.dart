@@ -1,11 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 ///sahrepref const
-final ID ="LS-ID";
-final TOKEN ="LS-TOKEN";
-
-
-
+final ID = "LS-ID";
+final TOKEN = "LS-TOKEN";
+final CID = "LS-CID";
 
 Future setSharedPrefrence(key, data) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

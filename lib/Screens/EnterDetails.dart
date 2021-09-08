@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/API/signupUser.dart';
 import 'package:learninghub/Const/Constants.dart';
@@ -156,8 +157,6 @@ class _EnterDetailsState extends State<EnterDetails> {
                 ID, rsp['attributes']['data'][0]['studentId'].toString());
             var token = await setSharedPrefrence(
                 TOKEN, rsp['attributes']['data'][0]['accessToken']);
-            print(id);
-            print(token);
             showToastSuccess("Account Created!");
             Navigator.push(
               context,
@@ -172,26 +171,33 @@ class _EnterDetailsState extends State<EnterDetails> {
           isTap = false;
         });
       },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 32, vertical: 10),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.white10),
-            borderRadius: BorderRadius.circular(4),
-            color: nameController.text.isEmpty ||
-                    emailController.text.isEmpty ||
-                    pinController.text.isEmpty
-                ? Colors.grey
-                : buttonGreen),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Text(
-            "Register",
-            style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
-          ),
-        ),
-      ),
+      child: isTap == true
+          ? SpinKitHourGlass(
+              color: buttonGreen,
+              size: 20,
+            )
+          : Container(
+              margin: EdgeInsets.symmetric(horizontal: 32, vertical: 10),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white10),
+                  borderRadius: BorderRadius.circular(4),
+                  color: nameController.text.isEmpty ||
+                          emailController.text.isEmpty ||
+                          pinController.text.isEmpty
+                      ? Colors.grey
+                      : buttonGreen),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  "Register",
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
+                ),
+              ),
+            ),
     );
   }
 

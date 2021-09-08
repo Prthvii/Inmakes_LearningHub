@@ -10,6 +10,7 @@ final reg = "createAccount";
 final checkNum = "check-number-exist";
 final schoolBoards = "listSchoolBoards";
 final slctCourse = "boardCourses";
+final activateAcc = "activateCourse";
 final IntroSlides = "intro-slides";
 final listCourse = "listAllCourses";
 final listSub = "listAllSubjects";

@@ -7,7 +7,8 @@ import 'package:learninghub/Widgets/newBottomNav.dart';
 
 class IntroScreens extends StatefulWidget {
   // const IntroScreens({Key? key}) : super(key: key);
-
+  final cid;
+  IntroScreens({this.cid});
   @override
   _IntroScreensState createState() => _IntroScreensState();
 }
