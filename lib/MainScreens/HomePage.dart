@@ -5,9 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/API/homepageAPI.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/colorConverter.dart';
-import 'package:learninghub/Screens/SingleSubject.dart';
+import 'package:learninghub/Screens/SingleSubChapters.dart';
 import 'package:learninghub/Widgets/Drawer.dart';
-import 'package:learninghub/Widgets/test.dart';
 
 class HomePage extends StatefulWidget {
   // const HomePage({Key? key}) : super(key: key);
@@ -101,10 +100,10 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => test()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => SingleSubjectsList()),
+                // );
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -270,59 +269,62 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget SubjectsList() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SingleSub()),
-        );
-      },
-      child: Container(
-        height: 80,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20, bottom: 20, left: 15),
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            separatorBuilder: (context, index) => SizedBox(
-              width: 10,
-            ),
-            shrinkWrap: true,
-            itemCount: arrSubjects != null ? arrSubjects.length : 0,
-            itemBuilder: (context, index) {
-              final item = arrSubjects != null ? arrSubjects[index] : null;
-              return subs(item, index);
-            },
+    return Container(
+      height: 80,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20, bottom: 20, left: 15),
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          separatorBuilder: (context, index) => SizedBox(
+            width: 10,
           ),
+          shrinkWrap: true,
+          itemCount: arrSubjects != null ? arrSubjects.length : 0,
+          itemBuilder: (context, index) {
+            final item = arrSubjects != null ? arrSubjects[index] : null;
+            return subs(item, index);
+          },
         ),
       ),
     );
   }
 
   subs(var item, int index) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.black54, width: 1),
-          borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Icon(
-              Icons.circle,
-              color: hexToColor(item['bgColor'].toString()),
-              size: 15,
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              item["subjectName"].toString(),
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600),
-            )
-          ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SingleSubjectsList(
+                  id: item["subjectId"].toString(),
+                  name: item["subjectName"].toString())),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black54, width: 1),
+            borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Icon(
+                Icons.circle,
+                color: hexToColor(item['bgColor'].toString()),
+                size: 15,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                item["subjectName"].toString(),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600),
+              )
+            ],
+          ),
         ),
       ),
     );

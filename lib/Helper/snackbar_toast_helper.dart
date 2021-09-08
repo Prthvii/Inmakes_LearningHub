@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:learninghub/Const/Constants.dart';
 
 customSnackBar(BuildContext context, String msg, String action,
     GlobalKey<ScaffoldState> key, int seconds) {
@@ -27,7 +28,7 @@ showToastError(String message) {
 showToastSuccess(String message) {
   Fluttertoast.showToast(
       msg: message,
-      backgroundColor: Colors.black,
+      backgroundColor: BlckColor,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,

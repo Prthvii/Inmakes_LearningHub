@@ -4,7 +4,10 @@ import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Screens/PlayerScreen.dart';
 
 class Videostab extends StatefulWidget {
-  // const Videostab({Key? key}) : super(key: key);
+  final array;
+  Videostab({
+    this.array,
+  });
 
   @override
   _VideostabState createState() => _VideostabState();
@@ -14,27 +17,33 @@ class _VideostabState extends State<Videostab> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView.separated(
-        padding: EdgeInsets.zero,
-        scrollDirection: Axis.vertical,
-        separatorBuilder: (context, index) => SizedBox(
-          height: 10,
+      child: Scrollbar(
+        child: ListView.separated(
+          padding: EdgeInsets.zero,
+          scrollDirection: Axis.vertical,
+          separatorBuilder: (context, index) => SizedBox(
+            height: 10,
+          ),
+          shrinkWrap: true,
+          itemCount: widget.array != null ? widget.array.length : 0,
+          itemBuilder: (context, index) {
+            final item = widget.array != null ? widget.array[index] : null;
+
+            return VideosList(item, index);
+          },
         ),
-        shrinkWrap: true,
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return VideosList(index);
-        },
       ),
     );
   }
 
-  VideosList(int index) {
+  VideosList(var item, int index) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PlayerScreen()),
+          MaterialPageRoute(
+              builder: (context) => PlayerScreen(
+                  ContentID: widget.array[0]["contentId"].toString())),
         );
       },
       child: Container(
@@ -58,8 +67,7 @@ class _VideostabState extends State<Videostab> {
                 Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(
-                              "https://wallpaperaccess.com/full/697829.jpg"),
+                          image: NetworkImage(item["coverImage"].toString()),
                           fit: BoxFit.cover)),
                   height: 160,
                   width: double.infinity,
@@ -76,7 +84,7 @@ class _VideostabState extends State<Videostab> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 8),
                       child: Text(
-                        "Biology",
+                        item["subjectName"].toString(),
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -90,7 +98,7 @@ class _VideostabState extends State<Videostab> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Text(
-                "Long chapter name can be shown here.",
+                item["sectionHeading"].toString(),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
