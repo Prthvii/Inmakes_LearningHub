@@ -11,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:learninghub/API/VidePlayerAPI.dart';
 import 'package:learninghub/API/ViewCommentsApi.dart';
+import 'package:learninghub/API/postCommentApi.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,6 +31,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
   ScrollController scrollController = new ScrollController();
   bool isVisible = true;
   var title;
+  TextEditingController commentController = TextEditingController();
+
   int selected = 0;
   var arrList = [];
   var arrVideoInfo = [];
@@ -604,6 +607,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 child: TextFormField(
                   cursorColor: Colors.white70,
                   maxLines: null,
+                  controller: commentController,
                   autofocus: false,
                   textInputAction: TextInputAction.done,
                   style: TextStyle(
@@ -627,18 +631,35 @@ class _PlayerScreenState extends State<PlayerScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(4)),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                child: Text(
-                  "Post",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold),
+            child: GestureDetector(
+              onTap: () async {
+                var comment =
+                    await postComment(videoId, commentController.text);
+                print("comment");
+                print(comment);
+                if (comment['attributes']['status'].toString() == "Success") {
+                  showToastSuccess(comment["attributes"]["response"]);
+                  commentController.clear();
+                }
+                setState(() {
+                  isLoading = true;
+                  video();
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4)),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                  child: Text(
+                    "Post",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),

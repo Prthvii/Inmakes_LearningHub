@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/MainScreens/ProfilePage.dart';
+import 'package:learninghub/Screens/Notification.dart';
 
 class DrawerWidget extends StatefulWidget {
   @override
@@ -34,7 +35,15 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         Divider(
                           color: Colors.grey,
                         ),
-                        _createDrawerItem(text: "Notifications", onTap: () {}),
+                        _createDrawerItem(
+                            text: "Notifications",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NotificationPage()),
+                              );
+                            }),
                         Divider(
                           color: Colors.grey,
                         ),

@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/API/homepageAPI.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/colorConverter.dart';
+import 'package:learninghub/Screens/LiveClasses.dart';
 import 'package:learninghub/Screens/SingleSubChapters.dart';
 import 'package:learninghub/Widgets/Drawer.dart';
 
@@ -548,12 +549,10 @@ class _HomePageState extends State<HomePage> {
   Widget Button() {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) =>
-        //           OTPScreen(mob: mobController.text.toString())),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LiveClasses()),
+        );
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 32),
