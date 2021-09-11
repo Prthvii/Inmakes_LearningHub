@@ -4,10 +4,13 @@ import 'dart:ui';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:learninghub/API/VidePlayerAPI.dart';
+import 'package:learninghub/API/ViewCommentsApi.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,10 +27,13 @@ class PlayerScreen extends StatefulWidget {
 }
 
 class _PlayerScreenState extends State<PlayerScreen> {
+  ScrollController scrollController = new ScrollController();
+  bool isVisible = true;
   var title;
   int selected = 0;
   var arrList = [];
   var arrVideoInfo = [];
+  var arrComments = [];
   var courseDetail = [];
   var lessons = [];
   var isLoading = true;
@@ -36,6 +42,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
   var url;
   var heading;
   var mob;
+  var videoId;
   var urlId = 0;
   var totalLength = 0;
   var exitPoint = 0;
@@ -55,7 +62,23 @@ class _PlayerScreenState extends State<PlayerScreen> {
   void initState() {
     super.initState();
     this.video();
-    print("player");
+    scrollController.addListener(() {
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (isVisible)
+          setState(() {
+            isVisible = false;
+          });
+      }
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        if (!isVisible)
+          setState(() {
+            isVisible = true;
+          });
+      }
+    });
+    // this.comment();
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
@@ -107,15 +130,22 @@ class _PlayerScreenState extends State<PlayerScreen> {
   ///api----
   Future<String> video() async {
     var rsp = await VideoPlayerApi(widget.ContentID);
-    print("Player");
-    print(rsp);
+    // print("Player");
+    // print(rsp);
     if (rsp['attributes']['status'].toString() == "Success") {
       setState(() {
         url = rsp["attributes"]["videos"]["vimeoHlsUrl"];
         heading = rsp["attributes"]["videos"]["sectionHeading"];
         mob = rsp["attributes"]["videos"]["supportNumber"];
+        videoId = rsp["attributes"]["videos"]["contentId"];
+
         initializePlayer();
       });
+      var response = await ViewCommentsApi(videoId);
+      if (response["attributes"]['status'].toString() == "Success") {
+        arrComments = response["attributes"]["comments"];
+        print(arrComments);
+      }
     } else {
       showToastSuccess("Something went wrong!");
     }
@@ -166,6 +196,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
+        backgroundColor: Color(0xff00202F),
+        resizeToAvoidBottomInset: true,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(0.01),
           child: AppBar(
@@ -201,7 +233,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                     Text(
                                       'Loading...',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w600),
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
                                     ),
                                   ],
                                 ),
@@ -238,25 +271,31 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                         ),
                                 ),
                               ),
-                        Container(
-                          child: Column(
-                            children: [
-                              Container(
-                                color: Color(0xff00202F),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 25),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 3),
+                          child: Container(
+                            // color: Color(0xff00202F),
+                            child: Column(
+                              children: [
+                                Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.09,
+                                  color: Color(0xff00202F),
                                   child: Row(
                                     children: [
                                       Expanded(
                                         flex: 5,
-                                        child: Text(
-                                          heading.toString(),
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: Text(
+                                            heading.toString(),
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          ),
                                         ),
                                       ),
                                       Padding(
@@ -271,6 +310,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                       Expanded(
                                         child: Container(
                                           child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Icon(
                                                 Icons.download_rounded,
@@ -295,259 +336,142 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                     ],
                                   ),
                                 ),
-                              ),
-                              Container(
-                                color: Colors.white12,
-                                width: double.infinity,
-                                height: 0.1,
-                              ),
-                              Container(
-                                color: Color(0xff00202F),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 25),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.arrow_back_ios,
-                                              color: Colors.white70,
-                                              size: 16,
-                                            ),
-                                            Text(
-                                              "Previous",
-                                              style: TextStyle(
-                                                  color: Colors.white54,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w400),
-                                            )
-                                          ],
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.radio_button_checked,
-                                              color: buttonGreen,
-                                              size: 15,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              "Part 1",
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: buttonGreen),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "Next",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                            Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: Colors.white70,
-                                              size: 16,
-                                            ),
-                                          ],
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                color: Colors.white12,
-                                width: double.infinity,
-                                height: 0.1,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Flexible(
-                          child: Container(
-                            color: Color(0xff00202F),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(4)),
-                          width: double.infinity,
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 25),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Your sample question can be shown here no matter how long",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ),
                                 Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.06,
                                   decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              "https://www.bolde.com/wp-content/uploads/2020/09/iStock-1269607964.jpg"),
-                                          fit: BoxFit.cover)),
-                                  height: 30,
-                                  width: 30,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xff062E40),
-                              border: Border.all(
-                                color: Color(0xff13394A),
-                              ),
-                              borderRadius: BorderRadius.circular(4)),
-                          width: double.infinity,
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff062E40),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: TextFormField(
-                                        cursorColor: Colors.white70,
-                                        autofocus: false,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500),
-                                        decoration: new InputDecoration(
-                                          border: InputBorder.none,
-                                          hintStyle: TextStyle(
-                                              fontSize: 14,
-                                              color: Color(0xff446270)),
-                                          hintText: "Ask a question?",
-                                          focusedBorder: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          errorBorder: InputBorder.none,
-                                          disabledBorder: InputBorder.none,
+                                      color: Color(0xff00202F),
+                                      border: Border(
+                                        top: BorderSide(
+                                            width: 0.1, color: Colors.white70),
+                                        bottom: BorderSide(
+                                            width: 0.1, color: Colors.white70),
+                                      )),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.arrow_back_ios,
+                                                color: Colors.white70,
+                                                size: 14,
+                                              ),
+                                              Text(
+                                                "Previous",
+                                                style: TextStyle(
+                                                    color: Colors.white54,
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              )
+                                            ],
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                          ),
                                         ),
-                                      ),
+                                        Container(
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.radio_button_checked,
+                                                color: buttonGreen,
+                                                size: 14,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Part 1",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: buttonGreen),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Next",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.white70,
+                                                size: 14,
+                                              ),
+                                            ],
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(4)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 10),
-                                      child: Text(
-                                        "Post",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                )
-
-                                // Text(
-                                //   "Chat with teacher",
-                                //   style: TextStyle(
-                                //       color: buttonGreen,
-                                //       fontSize: 16,
-                                //       fontWeight: FontWeight.w600),
-                                // ),
                               ],
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            openwhatsapp();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: BlckColor,
-                                border: Border.all(
-                                  color: buttonGreen,
-                                ),
-                                borderRadius: BorderRadius.circular(4)),
-                            width: double.infinity,
-                            margin: EdgeInsets.symmetric(horizontal: 20),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 25),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Container(
+                              color: Color(0xff00202F),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  // Image(
-                                  //   image: AssetImage("assets/images/whatsapp.png"),
-                                  //   height: 16,
-                                  //   width: 16,
-                                  // ),
-                                  // SizedBox(
-                                  //   width: 10,
-                                  // ),
-                                  Text(
-                                    "Chat with teacher",
-                                    style: TextStyle(
-                                        color: buttonGreen,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.36,
+                                    child: Scrollbar(
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.vertical,
+                                        separatorBuilder: (context, index) =>
+                                            SizedBox(
+                                          height: 10,
+                                        ),
+                                        shrinkWrap: true,
+                                        itemCount: arrComments != null
+                                            ? arrComments.length
+                                            : 0,
+                                        itemBuilder: (context, index) {
+                                          final item = arrComments != null
+                                              ? arrComments[index]
+                                              : null;
+                                          return Comments(item, index);
+                                        },
+                                      ),
+                                    ),
                                   ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        CommentBox(),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        ChatWhatsppButton()
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
@@ -582,6 +506,190 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   )
                 ],
               ),
+      ),
+    );
+  }
+
+  Comments(var item, int index) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.black, borderRadius: BorderRadius.circular(4)),
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    item["comment"].toString(),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white70,
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage(
+                        "assets/images/person.png",
+                      ),
+                      alignment: Alignment.center,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  height: 30,
+                  width: 30,
+                )
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Text(
+                  item["postDate"].toString(),
+                  style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w500),
+                ),
+                Spacer(),
+                Text(
+                  item["studentName"].toString(),
+                  style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w500),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  CommentBox() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Color(0xff062E40),
+          border: Border.all(
+            color: Color(0xff13394A),
+          ),
+          borderRadius: BorderRadius.circular(4)),
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Color(0xff062E40),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextFormField(
+                  cursorColor: Colors.white70,
+                  maxLines: null,
+                  autofocus: false,
+                  textInputAction: TextInputAction.done,
+                  style: TextStyle(
+                      fontSize: 16,
+                      letterSpacing: 0.8,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white),
+                  decoration: new InputDecoration(
+                    border: InputBorder.none,
+                    hintStyle:
+                        TextStyle(fontSize: 14, color: Color(0xff446270)),
+                    hintText: "Ask a question..",
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(4)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                child: Text(
+                  "Post",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          )
+
+          // Text(
+          //   "Chat with teacher",
+          //   style: TextStyle(
+          //       color: buttonGreen,
+          //       fontSize: 16,
+          //       fontWeight: FontWeight.w600),
+          // ),
+        ],
+      ),
+    );
+  }
+
+  ChatWhatsppButton() {
+    return GestureDetector(
+      onTap: () async {
+        openwhatsapp();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: BlckColor,
+            border: Border.all(
+              color: buttonGreen,
+            ),
+            borderRadius: BorderRadius.circular(4)),
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                FontAwesomeIcons.whatsapp,
+                color: buttonGreen,
+                size: 16,
+              ),
+              Text(
+                "    Chat with teacher",
+                style: TextStyle(
+                    color: buttonGreen,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
