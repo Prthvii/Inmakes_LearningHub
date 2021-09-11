@@ -141,7 +141,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
         initializePlayer();
       });
-      var response = await ViewCommentsApi(videoId);
+      var response = await viewVideoComments(videoId);
       if (response["attributes"]['status'].toString() == "Success") {
         arrComments = response["attributes"]["comments"];
         print(arrComments);
