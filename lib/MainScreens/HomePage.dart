@@ -6,6 +6,8 @@ import 'package:learninghub/API/homepageAPI.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/colorConverter.dart';
 import 'package:learninghub/Screens/LiveClasses.dart';
+import 'package:learninghub/Screens/Notification.dart';
+import 'package:learninghub/Screens/PlayerScreen.dart';
 import 'package:learninghub/Screens/SingleSubChapters.dart';
 import 'package:learninghub/Widgets/Drawer.dart';
 
@@ -97,6 +99,18 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         backgroundColor: Colors.white,
         actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationPage()),
+                );
+              },
+              icon: Icon(
+                Icons.notifications,
+                color: Colors.black,
+                size: 20,
+              )),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: GestureDetector(
@@ -239,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                     elevation: 16,
                     dropdownColor: liteBlack,
                     hint: Text(
-                      'Select course',
+                      arrCourses[0]["courseName"].toString(),
                       style: WhiteTextStyle,
                     ),
                     underline: Container(),
@@ -354,43 +368,52 @@ class _HomePageState extends State<HomePage> {
   }
 
   courses(var item, int index) {
-    return Stack(
-      children: [
-        Container(
-          width: 210,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.grey[200],
-              image: DecorationImage(
-                  image: NetworkImage(
-                    item["coverImage"].toString(),
-                  ),
-                  fit: BoxFit.cover)),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 15, bottom: 15),
-          child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.play_circle_outline,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    item["chapterName"].toString(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Txt12Semi,
-                  )
-                ],
-              )),
-        )
-      ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PlayerScreen(ContentID: item["id"])),
+        );
+      },
+      child: Stack(
+        children: [
+          Container(
+            width: 210,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Colors.grey[200],
+                image: DecorationImage(
+                    image: NetworkImage(
+                      item["coverImage"].toString(),
+                    ),
+                    fit: BoxFit.cover)),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, bottom: 15),
+            child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.play_circle_outline,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      item["chapterName"].toString(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Txt12Semi,
+                    )
+                  ],
+                )),
+          )
+        ],
+      ),
     );
   }
 

@@ -39,24 +39,37 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // backgroundColor: Colors.white,
+        backgroundColor: BlckColor,
         appBar: AppBar(
+          brightness: Brightness.dark,
           title: Text(
             "Notifications",
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: BlckColor,
           elevation: 0,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-                size: 18,
-              )),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: GreyTxtClr)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: buttonGreen,
+                    size: 13,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
         body: isLoading == true
             ? Center(
@@ -87,15 +100,21 @@ class _NotificationPageState extends State<NotificationPage> {
                 : Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset(
                           "assets/images/noNoti.png",
-                          width: MediaQuery.of(context).size.width * 0.4,
+                          width: MediaQuery.of(context).size.width * 0.35,
+                        ),
+                        SizedBox(
+                          height: 10,
                         ),
                         Text(
-                          "No Notifications..",
+                          "No Notifications  ",
                           style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w600),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white),
                         )
                       ],
                     ),
@@ -110,35 +129,54 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                item["title"].toString(),
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: buttonGreen,
+                ),
+                height: 10,
+                width: 10,
               ),
               SizedBox(
-                height: 3,
+                width: 10,
               ),
-              Text(
-                item["body"].toString(),
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[600]),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item["title"].toString(),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      item["body"].toString(),
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey[600]),
+                    ),
+                    Row(
+                      children: [
+                        Spacer(),
+                        Text(
+                          item["created_on"].toString(),
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey),
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  Spacer(),
-                  Text(
-                    item["created_on"].toString(),
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey),
-                  )
-                ],
-              )
             ],
           ),
         ),

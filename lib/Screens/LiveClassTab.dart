@@ -12,14 +12,14 @@ class Live extends StatefulWidget {
 class _LiveState extends State<Live> {
   var isLoading = true;
   var arrLive = [];
-  var link;
+  var weblink;
+
   Future<String> getLive() async {
     var rsp = await LiveApi();
     print(rsp);
     if (rsp['attributes']['status'].toString() == "Success") {
       arrLive = rsp["attributes"]["data"];
-      link = arrLive[0]["liveUrl"];
-      print(link);
+
       setState(() {});
     } else {
       showToastSuccess("Something went wrong!");
@@ -58,7 +58,11 @@ class _LiveState extends State<Live> {
   Live(var item, int index) {
     return GestureDetector(
       onTap: () {
-        _launchURL(item["liveUrl"]);
+        weblink = item["liveUrl"].toString();
+        print("`````````````````````````````````````");
+        print(weblink);
+        print("`````````````````````````````````````");
+        _launchURL(weblink);
       },
       child: Container(
         margin: EdgeInsets.only(left: 15, right: 15, top: 15),
@@ -119,12 +123,15 @@ class _LiveState extends State<Live> {
     );
   }
 
-  _launchURL(link) async {
-    const url = link;
-    if (await canLaunch(url)) {
-      await launch(url);
+  _launchURL(String weblink) async {
+    if (await canLaunch(weblink)) {
+      await launch(
+        weblink,
+        // forceWebView: false,
+      );
     } else {
-      throw 'Could not launch $url';
+      showToastSuccess("Something went wrong! Please try again later");
+      throw 'Could not launch $weblink';
     }
   }
 }
