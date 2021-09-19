@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   var arrRecentVideos = [];
   var arrCourses = [];
   var name;
+  var userID;
   List arrCourseList = List();
   String dropdownValue;
   var isLoading = true;
@@ -38,6 +39,10 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         arrStudentInfo = rsp["attributes"]["studentInfo"];
         name = arrStudentInfo[0]["fullName"].toString();
+        userID = arrStudentInfo[0]["studentId"].toString();
+        print("userID");
+        print(userID);
+        print("userID");
         arrSubjects = rsp["attributes"]["subjects"];
         arrRecentVideos = rsp["attributes"]["recentVideos"];
         arrCourses = rsp["attributes"]["courses"];
@@ -73,7 +78,7 @@ class _HomePageState extends State<HomePage> {
       key: scaffoldKey, extendBody: true,
 
       // drawer: NewDrawer(),
-      drawer: DrawerWidget(),
+      drawer: DrawerWidget(id: userID.toString(), name: name.toString()),
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,

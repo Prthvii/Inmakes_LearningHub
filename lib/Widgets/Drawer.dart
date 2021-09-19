@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/MainScreens/ProfilePage.dart';
 import 'package:learninghub/Screens/Notification.dart';
+import 'package:learninghub/Screens/SubscriptionsPage.dart';
 
 class DrawerWidget extends StatefulWidget {
+  final id;
+  final name;
+  DrawerWidget({this.id, this.name});
+
   @override
   _DrawerWidgetState createState() => _DrawerWidgetState();
 }
@@ -27,7 +32,15 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     child: ListView(
                       physics: ClampingScrollPhysics(),
                       children: [
-                        _createDrawerItem(text: "Subrscriptions", onTap: () {}),
+                        _createDrawerItem(
+                            text: "Subscriptions",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SubscriptionsPage()),
+                              );
+                            }),
                         Divider(
                           color: Colors.grey,
                         ),
@@ -188,11 +201,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   height: 60,
                   width: 60,
                   decoration: BoxDecoration(
+                      color: Colors.grey[200],
                       border: Border.all(color: buttonGreen, width: 2),
                       image: DecorationImage(
-                          image: NetworkImage(
-                              "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/103058/s960_Minister_Donelan.jpeg"),
-                          fit: BoxFit.cover),
+                          image: AssetImage("assets/images/profile.png"),
+                          scale: 2),
                       shape: BoxShape.circle),
                 ),
                 Column(
@@ -201,14 +214,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Aaron Taylor",
+                      widget.name.toString(),
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      "ID: 1234",
+                      "ID: " + widget.id,
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize: 14,

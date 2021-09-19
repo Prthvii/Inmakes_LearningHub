@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:learninghub/API/notificationsApi.dart';
+import 'package:learninghub/API/mySubscriptionsApi.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
 
-class NotificationPage extends StatefulWidget {
-  // const Notification({Key? key}) : super(key: key);
-
+class SubscriptionsPage extends StatefulWidget {
   @override
-  _NotificationPageState createState() => _NotificationPageState();
+  _SubscriptionsPageState createState() => _SubscriptionsPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> {
+class _SubscriptionsPageState extends State<SubscriptionsPage> {
   var isLoading = true;
-  var arrNotifications = [];
+  var arrSubs = [];
   Future<String> notificationnn() async {
-    var rsp = await notificationApi();
+    var rsp = await SubscriptionApi();
     print(rsp);
     if (rsp['attributes']['status'].toString() == "Success") {
-      arrNotifications = rsp["attributes"]["notifications"];
+      arrSubs = rsp["attributes"]["subscription"];
+      print(arrSubs);
       setState(() {});
     } else {
       showToastSuccess("Something went wrong!");
@@ -43,7 +42,7 @@ class _NotificationPageState extends State<NotificationPage> {
         appBar: AppBar(
           brightness: Brightness.dark,
           title: Text(
-            "Notifications",
+            "My Subscriptions",
             style: TextStyle(
                 fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
           ),
@@ -77,23 +76,19 @@ class _NotificationPageState extends State<NotificationPage> {
                 color: buttonGreen,
                 size: 20,
               ))
-            : arrNotifications != null
+            : arrSubs != null
                 ? Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    margin: EdgeInsets.all(12),
                     child: ListView.separated(
                       scrollDirection: Axis.vertical,
                       separatorBuilder: (context, index) => SizedBox(
                         height: 10,
                       ),
                       shrinkWrap: true,
-                      itemCount: arrNotifications != null
-                          ? arrNotifications.length
-                          : 0,
+                      itemCount: arrSubs != null ? arrSubs.length : 0,
                       itemBuilder: (context, index) {
-                        final item = arrNotifications != null
-                            ? arrNotifications[index]
-                            : null;
-                        return notificationItems(item, index);
+                        final item = arrSubs != null ? arrSubs[index] : null;
+                        return list(item, index);
                       },
                     ),
                   )
@@ -103,14 +98,14 @@ class _NotificationPageState extends State<NotificationPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset(
-                          "assets/images/noNoti.png",
-                          width: MediaQuery.of(context).size.width * 0.35,
+                          "assets/images/no.png",
+                          width: MediaQuery.of(context).size.width * 0.7,
                         ),
                         SizedBox(
                           height: 10,
                         ),
                         Text(
-                          "No Notifications  ",
+                          "No Active Subscriptions",
                           style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -121,64 +116,41 @@ class _NotificationPageState extends State<NotificationPage> {
                   ));
   }
 
-  notificationItems(var item, int index) {
+  list(var item, int index) {
     return Card(
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: buttonGreen,
-                ),
-                height: 10,
-                width: 10,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item["courseName"].toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
               ),
-              SizedBox(
-                width: 10,
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              "Course Duration: " + item["courseDetails"].toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item["title"].toString(),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      item["body"].toString(),
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey[600]),
-                    ),
-                    Row(
-                      children: [
-                        Spacer(),
-                        Text(
-                          item["created_on"].toString(),
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              "Expiry Date: " + item["expired_on"].toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

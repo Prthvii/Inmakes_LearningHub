@@ -41,11 +41,13 @@ class _RecentPageState extends State<RecentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(1.0),
-        child: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          "Recently Watched",
+          style: TextStyle(
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
         ),
       ),
       body: isLoading == true

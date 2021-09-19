@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:learninghub/API/homepageAPI.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Screens/Notification.dart';
+import 'package:learninghub/Screens/SubscriptionsPage.dart';
 
 class ProfilePage extends StatefulWidget {
   // const ProfilePage({Key? key}) : super(key: key);
@@ -14,7 +15,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   var arrStudentInfo = [];
+  var arrCourses = [];
+  List arrCourseList = List();
   var name;
+  var course;
   var email;
   var id;
   var number;
@@ -26,6 +30,14 @@ class _ProfilePageState extends State<ProfilePage> {
     // print(rsp);
     if (rsp['attributes']['status'].toString() == "Success") {
       setState(() {
+        arrCourses = rsp["attributes"]["courses"];
+        if (arrCourses != null) {
+          for (var value in arrCourses) {
+            final Course = value["courseName"].toString();
+            arrCourseList.add(Course);
+          }
+        }
+        print(arrCourseList);
         arrStudentInfo = rsp["attributes"]["studentInfo"];
         name = arrStudentInfo[0]["fullName"].toString();
         id = arrStudentInfo[0]["studentId"].toString();
@@ -143,12 +155,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                           height: 45,
                                           width: 45,
                                           decoration: BoxDecoration(
+                                              color: Colors.grey[200],
                                               border: Border.all(
                                                   color: buttonGreen, width: 2),
                                               image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/image_data/file/103058/s960_Minister_Donelan.jpeg"),
-                                                  fit: BoxFit.cover),
+                                                  image: AssetImage(
+                                                      "assets/images/profile.png"),
+                                                  scale: 3),
                                               shape: BoxShape.circle),
                                         ),
                                         SizedBox(
@@ -180,16 +193,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ],
                                     ),
                                     head("Personal Info"),
-                                    // Divider(),
-                                    _items("Account Settings", "Aaron Taylor"),
-                                    Divider(),
-                                    _items("Mobile", number.toString()),
+                                    _items(
+                                        "Mobile", "+91 " + number.toString()),
                                     Divider(),
                                     _items("Email", email.toString()),
                                     Divider(),
                                     head("Course Info"),
                                     Divider(),
-                                    _items("Course Info", "Inmakes edu"),
+                                    _items("Active Course",
+                                        arrCourseList.toString()),
                                     Divider(),
                                     _items("Course", "Plus Two Science"),
                                     Divider(),
@@ -204,44 +216,53 @@ class _ProfilePageState extends State<ProfilePage> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 20),
-                            child: Container(
-                              // margin: EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: buttonGreen,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 20),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 30,
-                                      width: 30,
-                                      color: Colors.white54,
-                                      child: Icon(
-                                        Icons.credit_card,
-                                        color: Colors.white,
-                                        size: 18,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      "Custom Payment",
-                                      style: TextStyle(
-                                          fontSize: 14,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SubscriptionsPage()),
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: buttonGreen,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 20, horizontal: 20),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 30,
+                                        width: 30,
+                                        color: Colors.white54,
+                                        child: Icon(
+                                          Icons.subscriptions,
                                           color: Colors.white,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Spacer(),
-                                    Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.white,
-                                      size: 15,
-                                    )
-                                  ],
+                                          size: 18,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        "My Subscriptions",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      Spacer(),
+                                      Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.white,
+                                        size: 15,
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
