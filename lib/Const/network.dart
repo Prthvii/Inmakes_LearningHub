@@ -36,3 +36,5 @@ final ref = "referrals";
 final accessCodes = "accessCodeActivation";
 final webLoginKey = "webAccessToken";
 final upgrade = "upgradeAccountPremium";
+final clearNoti = "clearNotifications";
+final cslling = "counselling";

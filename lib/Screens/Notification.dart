@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:learninghub/API/ClearNoti.dart';
 import 'package:learninghub/API/notificationsApi.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
@@ -80,21 +81,56 @@ class _NotificationPageState extends State<NotificationPage> {
             : arrNotifications != null
                 ? Container(
                     margin: EdgeInsets.symmetric(horizontal: 10),
-                    child: ListView.separated(
-                      scrollDirection: Axis.vertical,
-                      separatorBuilder: (context, index) => SizedBox(
-                        height: 10,
-                      ),
-                      shrinkWrap: true,
-                      itemCount: arrNotifications != null
-                          ? arrNotifications.length
-                          : 0,
-                      itemBuilder: (context, index) {
-                        final item = arrNotifications != null
-                            ? arrNotifications[index]
-                            : null;
-                        return notificationItems(item, index);
-                      },
+                    child: Column(
+                      children: [
+                        ListView.separated(
+                          scrollDirection: Axis.vertical,
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: 10,
+                          ),
+                          shrinkWrap: true,
+                          itemCount: arrNotifications != null
+                              ? arrNotifications.length
+                              : 0,
+                          itemBuilder: (context, index) {
+                            final item = arrNotifications != null
+                                ? arrNotifications[index]
+                                : null;
+                            return notificationItems(item, index);
+                          },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            print("clear");
+                            setState(() {
+                              arrNotifications.clear();
+                            });
+                            var rsp = await clearNotiApi();
+                            print(rsp);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Clear all",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Icon(
+                                Icons.clear_all,
+                                color: Colors.white,
+                                size: 15,
+                              )
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   )
                 : Center(

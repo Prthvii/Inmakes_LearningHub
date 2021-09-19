@@ -12,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:learninghub/API/VidePlayerAPI.dart';
 import 'package:learninghub/API/ViewCommentsApi.dart';
 import 'package:learninghub/API/postCommentApi.dart';
+import 'package:learninghub/API/seekPointApi.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -163,8 +164,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
   Future<void> initializePlayer() async {
     _videoPlayerController1 = VideoPlayerController.network(url.toString());
     await _videoPlayerController1.initialize();
-    totalLength = _videoPlayerController1.value.duration.inSeconds;
-
+    setState(() {
+      totalLength = _videoPlayerController1.value.duration.inSeconds;
+    });
+    print("total timeeeeeee");
+    print(totalLength);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController1,
       autoPlay: true,
@@ -179,11 +183,17 @@ class _PlayerScreenState extends State<PlayerScreen> {
   }
 
   Future<String> exiT() async {
-    // showToastSuccess("Exiting...");
-    // var rsp =
-    //     await sendSeek(widget.id, lessons[urlId]['id'], totalLength, exitPoint);
-    // print("senddd");
-    // print(rsp);
+    exitPoint = _videoPlayerController1.value.position.inSeconds;
+    print("exitt  timeeeeeee");
+    print(exitPoint);
+
+    var rsp = await seekPointApi(
+      widget.ContentID,
+      exitPoint,
+      totalLength,
+    );
+    print("senddd");
+    print(rsp);
     return "0";
   }
 

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:learninghub/API/CounsellingApi.dart';
 import 'package:learninghub/API/homepageAPI.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/colorConverter.dart';
+import 'package:learninghub/Helper/snackbar_toast_helper.dart';
 import 'package:learninghub/Screens/LiveClasses.dart';
 import 'package:learninghub/Screens/Notification.dart';
 import 'package:learninghub/Screens/PlayerScreen.dart';
@@ -120,10 +122,10 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: GestureDetector(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => SingleSubjectsList()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LiveClasses()),
+                );
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -386,8 +388,8 @@ class _HomePageState extends State<HomePage> {
           Container(
             width: 210,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(15),
+                // color: Colors.grey[200],
                 image: DecorationImage(
                     image: NetworkImage(
                       item["coverImage"].toString(),
@@ -466,7 +468,16 @@ class _HomePageState extends State<HomePage> {
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Button()
+                    GestureDetector(
+                      child: Button("Live Classes"),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LiveClasses()),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),
@@ -501,7 +512,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.white),
                     ),
                     Text(
-                      "Live classes by best teachers from LearningHub to clear your doubts and to provide individual attention",
+                      "Get free counselling for your self development ",
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -510,92 +521,41 @@ class _HomePageState extends State<HomePage> {
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Button()
+                    GestureDetector(
+                      child: Button("Book Now"),
+                      onTap: () async {
+                        print("counselling call");
+                        setState(() {});
+                        var rsp = await CounsellingApi();
+                        print(rsp);
+                        showToastSuccess(
+                            rsp["attributes"]["response"].toString());
+                      },
+                    )
                   ],
                 ),
               ),
             ),
           ],
         ),
-        // child: ListView.separated(
-        //   scrollDirection: Axis.horizontal,
-        //   separatorBuilder: (context, index) => SizedBox(
-        //     width: 10,
-        //   ),
-        //   shrinkWrap: true,
-        //   itemCount: 5,
-        //   itemBuilder: (context, index) {
-        //     return LiveClassWidget(index);
-        //   },
-        // ),
       ),
     );
   }
 
-  Widget LiveClassWidget(int index) {
+  Widget Button(String txt) {
     return Container(
-      height: 400,
-      width: MediaQuery.of(context).size.width * 0.7,
+      margin: EdgeInsets.symmetric(horizontal: 32),
+      alignment: Alignment.center,
       decoration: BoxDecoration(
-          color: BlckColor, borderRadius: BorderRadius.circular(8)),
+          border: Border.all(color: Colors.white10),
+          borderRadius: BorderRadius.circular(4),
+          color: buttonGreen),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: circleClr),
-              height: 80,
-              width: 80,
-            ),
-            Text(
-              "Inmakes live classes",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            Text(
-              "Live classes by best teachers from LearningHub to clear your doubts and to provide individual attention",
-              style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w500, color: BlckTxtClr),
-              textAlign: TextAlign.left,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Button()
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget Button() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LiveClasses()),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 32),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.white10),
-            borderRadius: BorderRadius.circular(4),
-            color: buttonGreen),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Text(
-            "Book a free Class",
-            style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
-          ),
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Text(
+          txt,
+          style: TextStyle(
+              fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
         ),
       ),
     );

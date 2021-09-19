@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:learninghub/API/mySubscriptionsApi.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
@@ -123,32 +124,68 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              item["courseName"].toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
+            Row(
+              children: [
+                Icon(
+                  FontAwesomeIcons.graduationCap,
+                  size: 10,
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  item["courseName"].toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 5,
             ),
-            Text(
-              "Course Duration: " + item["courseDetails"].toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-              ),
+            Row(
+              children: [
+                Icon(
+                  FontAwesomeIcons.clock,
+                  size: 10,
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "Course Duration: " + item["courseDetails"].toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 5,
             ),
-            Text(
-              "Expiry Date: " + item["expired_on"].toString(),
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-              ),
+            Row(
+              children: [
+                Icon(
+                  FontAwesomeIcons.calendarAlt,
+                  size: 10,
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "Expiry Date: " + item["expired_on"].toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
