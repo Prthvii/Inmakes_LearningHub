@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Gilory'),
-      // home: SelectSchoolBoard(),
+      // home: EnterNum(),
       home: SplashScreen(),
     );
   }

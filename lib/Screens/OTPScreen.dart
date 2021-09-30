@@ -44,7 +44,9 @@ class _OTPScreenState extends State<OTPScreen> {
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 30),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.1,
+                      ),
                       child: Center(
                         child: SvgPicture.asset(
                           "assets/images/logo.svg",
@@ -96,7 +98,7 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
               Container(
                 alignment: Alignment.center,
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: MediaQuery.of(context).size.height * 0.37,
                 decoration: BoxDecoration(
                     color: BlckColor,
                     borderRadius: BorderRadius.only(
@@ -106,7 +108,9 @@ class _OTPScreenState extends State<OTPScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(
+                        top: 40,
+                      ),
                       child: Container(
                         child: Column(
                           children: [
@@ -159,7 +163,9 @@ class _OTPScreenState extends State<OTPScreen> {
                     ),
                     Container(
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 25),
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height * 0.03,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

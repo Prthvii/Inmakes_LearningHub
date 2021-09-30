@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:learninghub/API/homepageAPI.dart';
 import 'package:learninghub/Const/Constants.dart';
+import 'package:learninghub/Screens/EnterNum.dart';
 import 'package:learninghub/Screens/Notification.dart';
 import 'package:learninghub/Screens/SubscriptionsPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   // const ProfilePage({Key? key}) : super(key: key);
@@ -129,7 +131,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             width: 15,
                           ),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                showAlertDialog(context);
+                              },
                               icon: Icon(
                                 Icons.logout,
                                 color: Colors.white,
@@ -383,6 +387,47 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("No"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Yes"),
+      onPressed: () async {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        await preferences.clear();
+        print("logout");
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => EnterNum()),
+        );
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirm Logout?"),
+      content: Text("Are you sure you want to logout?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

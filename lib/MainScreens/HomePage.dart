@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Hello,",
+            greeting(),
             style: Txt12Med,
           ),
           SizedBox(
@@ -351,12 +351,10 @@ class _HomePageState extends State<HomePage> {
                   name: item["subjectName"].toString())),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black54, width: 1),
-            borderRadius: BorderRadius.circular(10)),
+      child: Card(
+        elevation: 8,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           child: Row(
             children: [
               Icon(
@@ -383,7 +381,7 @@ class _HomePageState extends State<HomePage> {
 
   RcntCr() {
     return Container(
-      height: 121,
+      height: 140,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: ListView.separated(
@@ -417,13 +415,20 @@ class _HomePageState extends State<HomePage> {
           Container(
             width: 210,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                // color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: (Colors.grey[300]),
+                    spreadRadius: 1,
+                    blurRadius: 1,
+                    offset: Offset(0, 1),
+                  ),
+                ],
                 image: DecorationImage(
-                    image: NetworkImage(
-                      item["coverImage"].toString(),
-                    ),
-                    fit: BoxFit.cover)),
+                    image:
+                        NetworkImage(item["coverImage"].toString(), scale: 1),
+                    fit: BoxFit.cover),
+                border: Border.all(color: Colors.black12)),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15, bottom: 15),
@@ -453,6 +458,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  String greeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning,';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon,';
+    }
+    return 'Good Evening,';
+  }
+
   liveClassesList() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 30),
@@ -474,7 +490,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: circleClr),
+                          shape: BoxShape.circle,
+                          color: circleClr,
+                          image: DecorationImage(
+                              image: AssetImage("assets/images/AppIcon.png"))),
                       height: 80,
                       width: 80,
                     ),
@@ -527,7 +546,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: circleClr),
+                          shape: BoxShape.circle,
+                          color: circleClr,
+                          image: DecorationImage(
+                              image: AssetImage("assets/images/AppIcon.png"))),
                       height: 80,
                       width: 80,
                     ),

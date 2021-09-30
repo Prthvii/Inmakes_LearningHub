@@ -94,10 +94,7 @@ class _LiveState extends State<Live> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: Icon(
-                    FontAwesomeIcons.playCircle,
-                    color: buttonGreen,
-                  ),
+                  child: Image.asset("assets/images/play.gif",height: 40,),
                 ),
                 Expanded(
                   child: Column(

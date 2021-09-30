@@ -78,7 +78,9 @@ class _EnterDetailsState extends State<EnterDetails> {
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 80),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.15,
+                      ),
                       child: Center(
                         child: SvgPicture.asset(
                           "assets/images/logo.svg",
@@ -116,9 +118,8 @@ class _EnterDetailsState extends State<EnterDetails> {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16))),
-                child: Wrap(
-                  runSpacing: 10,
-                  alignment: WrapAlignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     NameField(),
                     EmailField(),

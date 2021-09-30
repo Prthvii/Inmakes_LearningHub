@@ -92,16 +92,16 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
           child: Column(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.65,
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 80),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.15,
+                      ),
                       child: Center(
                         child: SvgPicture.asset(
                           "assets/images/logo.svg",
-                          height: 100,
-                          width: 100,
                         ),
                       ),
                     ),
@@ -128,19 +128,15 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
               ),
               Container(
                 alignment: Alignment.center,
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.35,
                 decoration: BoxDecoration(
                     color: BlckColor,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16))),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    runSpacing: 10,
-                    children: [SelectBoard(), SelectCourse(), Button()],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [SelectBoard(), SelectCourse(), Button()],
                 ),
               )
             ],
