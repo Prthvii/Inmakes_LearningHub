@@ -83,6 +83,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: BlckColor,
                     height: MediaQuery.of(context).size.height * 0.4,
                   ),
+                  Positioned(
+                    child: Image.asset(
+                      "assets/images/ArtD.png",
+                      width: MediaQuery.of(context).size.width * 0.6,
+                    ),
+                    top: 0,
+                    left: 0,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40),
                     child: Align(

@@ -52,7 +52,17 @@ class _SingleChapterScreenState extends State<SingleChapterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setSystemUIOverlayStyle(
+    //     SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return Scaffold(
+      // appBar: PreferredSize(
+      //   preferredSize: Size.fromHeight(1.0),
+      //   child: AppBar(
+      //     elevation: 0,
+      //     backgroundColor: BlckColor,
+      //     brightness: Brightness.dark,
+      //   ),
+      // ),
       backgroundColor: BlckColor,
       body: isLoading == true
           ? Container(
@@ -118,6 +128,15 @@ class _SingleChapterScreenState extends State<SingleChapterScreen> {
                               color: BlckColor,
                               child: Stack(
                                 children: [
+                                  Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: Image.asset(
+                                        "assets/images/Art 10.png",
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.35,
+                                      )),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 35),
                                     child: Align(
@@ -133,7 +152,7 @@ class _SingleChapterScreenState extends State<SingleChapterScreen> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 30, top: 30),
+                                        left: 20, top: 40),
                                     child: Align(
                                       alignment: Alignment.topLeft,
                                       child: GestureDetector(

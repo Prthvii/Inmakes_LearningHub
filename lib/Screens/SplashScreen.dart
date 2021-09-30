@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/sharedPref.dart';
 import 'package:learninghub/Widgets/newBottomNav.dart';
@@ -25,20 +24,20 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.white));
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(children: [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 50),
-          child: Center(
-            child: SvgPicture.asset(
-              "assets/images/logo.svg",
-            ),
+          height: MediaQuery.of(context).size.height * 1,
+          width: MediaQuery.of(context).size.width * 1,
+          child: Image.asset(
+            "assets/images/Place Holder.jpg",
+            fit: BoxFit.cover,
           ),
         ),
         Positioned(
-          bottom: 100,
+          bottom: MediaQuery.of(context).size.height * 0.18,
           left: 0,
           right: 0,
           child: SpinKitFoldingCube(

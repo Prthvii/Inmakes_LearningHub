@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:learninghub/API/SingleChapterApi.dart';
 import 'package:learninghub/Const/Constants.dart';
@@ -54,15 +55,16 @@ class _SingleSubjectsListState extends State<SingleSubjectsList> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-
+    // SystemChrome.setSystemUIOverlayStyle(
+    //     SystemUiOverlayStyle(statusBarColor: Colors.red));
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(0.01),
-          child: AppBar(
-            brightness: Brightness.dark,
-            backgroundColor: BlckColor,
-          ),
-        ),
+        // appBar: PreferredSize(
+        //   preferredSize: Size.fromHeight(0.01),
+        //   child: AppBar(
+        //     brightness: Brightness.dark,
+        //     backgroundColor: BlckColor,
+        //   ),
+        // ),
         body: isLoading == true
             ? Center(
                 child: SpinKitFadingCube(
@@ -121,6 +123,7 @@ class _SingleSubjectsListState extends State<SingleSubjectsList> {
                       return <Widget>[
                         SliverAppBar(
                           backgroundColor: BlckColor,
+                          brightness: Brightness.dark,
                           expandedHeight:
                               MediaQuery.of(context).size.height * 0.35,
                           leading: Padding(
@@ -151,58 +154,71 @@ class _SingleSubjectsListState extends State<SingleSubjectsList> {
                           automaticallyImplyLeading: false,
                           pinned: true,
                           flexibleSpace: FlexibleSpaceBar(
-                            title: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            title: Stack(
                               children: [
-                                Text(
-                                  widget.name,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                                // SizedBox(
-                                //   height: 10,
-                                // ),
-                                Row(
+                                Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: Image.asset(
+                                      "assets/images/Art 10.png",
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.4,
+                                    )),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Icon(
-                                      Icons.radio_button_checked,
-                                      color: buttonGreen,
-                                      size: 10,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
                                     Text(
-                                      arrChapters.length.toString() +
-                                          " Chapters",
+                                      widget.name,
                                       style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500,
-                                          color: buttonGreen),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
                                     ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    Icon(
-                                      Icons.timer,
-                                      color: buttonGreen,
-                                      size: 10,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      "124 hours",
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500,
-                                          color: buttonGreen),
-                                    ),
+                                    // SizedBox(
+                                    //   height: 10,
+                                    // ),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.radio_button_checked,
+                                          color: buttonGreen,
+                                          size: 10,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          arrChapters.length.toString() +
+                                              " Chapters",
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w500,
+                                              color: buttonGreen),
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Icon(
+                                          Icons.timer,
+                                          color: buttonGreen,
+                                          size: 10,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "124 hours",
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w500,
+                                              color: buttonGreen),
+                                        ),
+                                      ],
+                                    )
                                   ],
-                                )
+                                ),
                               ],
                             ),
                             background: Container(

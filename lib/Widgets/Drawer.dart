@@ -23,104 +23,121 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           elevation: 0,
           child: Container(
             decoration: BoxDecoration(color: BlckColor),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-              child: Column(
-                children: [
-                  _createHeader(),
-                  Flexible(
-                    child: ListView(
-                      physics: ClampingScrollPhysics(),
-                      children: [
-                        _createDrawerItem(
-                            text: "Subscriptions",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SubscriptionsPage()),
-                              );
-                            }),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        _createDrawerItem(text: "Downloads", onTap: () {}),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        _createDrawerItem(
-                            text: "Notifications",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NotificationPage()),
-                              );
-                            }),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        _createDrawerItem(text: "Referrals", onTap: () {}),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        _createDrawerItem(text: "Share app", onTap: () {}),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 10, top: 10),
-                            child: Row(
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: buttonGreen,
-                                    ),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  height: 30,
-                                  width: 30,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "Logout",
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Container(
-                          height: 47,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: buttonGreen, width: 2)),
-                          child: Text(
-                            "Enquire now",
-                            style: TextStyle(
-                                color: buttonGreen,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      ],
-                    ),
+            child: Stack(
+              children: [
+                Positioned(
+                  child: Image.asset(
+                    "assets/images/ArtD.png",
+                    width: MediaQuery.of(context).size.width * 0.6,
                   ),
-                ],
-              ),
+                  top: 0,
+                  left: 0,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                  child: Column(
+                    children: [
+                      _createHeader(),
+                      Flexible(
+                        child: ListView(
+                          physics: ClampingScrollPhysics(),
+                          children: [
+                            _createDrawerItem(
+                                text: "Subscriptions",
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SubscriptionsPage()),
+                                  );
+                                }),
+                            Divider(
+                              color: Colors.grey,
+                            ),
+                            _createDrawerItem(text: "Downloads", onTap: () {}),
+                            Divider(
+                              color: Colors.grey,
+                            ),
+                            _createDrawerItem(
+                                text: "Notifications",
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            NotificationPage()),
+                                  );
+                                }),
+                            Divider(
+                              color: Colors.grey,
+                            ),
+                            _createDrawerItem(text: "Referrals", onTap: () {}),
+                            Divider(
+                              color: Colors.grey,
+                            ),
+                            _createDrawerItem(text: "Share app", onTap: () {}),
+                            Divider(
+                              color: Colors.grey,
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: 10, top: 10),
+                                child: Row(
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: buttonGreen,
+                                        ),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      height: 30,
+                                      width: 30,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "Logout",
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Container(
+                              height: 47,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  border:
+                                      Border.all(color: buttonGreen, width: 2)),
+                              child: Text(
+                                "Enquire now",
+                                style: TextStyle(
+                                    color: buttonGreen,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -184,6 +201,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 height: 30,
                 width: 30,
                 decoration: BoxDecoration(
+                    color: BlckColor,
                     borderRadius: BorderRadius.circular(5),
                     border: Border.all(color: GreyTxtClr)),
                 child: Icon(

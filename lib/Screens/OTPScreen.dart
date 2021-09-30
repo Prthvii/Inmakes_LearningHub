@@ -6,8 +6,8 @@ import 'package:learninghub/API/verifyOtp.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/sharedPref.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
-import 'package:learninghub/MainScreens/HomePage.dart';
 import 'package:learninghub/Screens/EnterDetails.dart';
+import 'package:learninghub/Widgets/newBottomNav.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:timer_button/timer_button.dart';
 
@@ -215,7 +215,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => newBottom()),
             );
           } else {
             print("new user");
@@ -311,7 +311,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => newBottom()),
               );
             } else {
               print("new user");

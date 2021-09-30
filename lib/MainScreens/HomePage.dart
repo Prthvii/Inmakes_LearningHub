@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:learninghub/API/CounsellingApi.dart';
 import 'package:learninghub/API/homepageAPI.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/colorConverter.dart';
+import 'package:learninghub/Helper/sharedPref.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
 import 'package:learninghub/Screens/LiveClasses.dart';
 import 'package:learninghub/Screens/Notification.dart';
@@ -48,6 +48,12 @@ class _HomePageState extends State<HomePage> {
         arrSubjects = rsp["attributes"]["subjects"];
         arrRecentVideos = rsp["attributes"]["recentVideos"];
         arrCourses = rsp["attributes"]["courses"];
+        print("000000000000000000000000");
+        print(
+          arrCourses[0]["courseName"].toString(),
+        );
+        print("000000000000000000000000");
+        var CourseID = setSharedPrefrence(CID, arrCourses[0]["courseId"]);
         if (arrCourses != null) {
           for (var value in arrCourses) {
             final Course = value["courseName"].toString();
@@ -74,15 +80,70 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return Scaffold(
       key: scaffoldKey, extendBody: true,
 
       // drawer: NewDrawer(),
       drawer: DrawerWidget(id: userID.toString(), name: name.toString()),
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(1.0),
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+        ),
+      ),
+      body: isLoading == true
+          ? Center(
+              child: SpinKitFadingCube(
+              color: buttonGreen,
+              size: 20,
+            ))
+          : SingleChildScrollView(
+              child: Stack(
+                children: [
+                  Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Image.asset(
+                        "assets/images/Art 10.png",
+                        height: MediaQuery.of(context).size.height * 0.4,
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 60),
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          appbar(),
+                          NameSection(),
+                          BannerClass(),
+                          SubjectsList(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Text(
+                              "Recent Courses",
+                              style: Txt12Med,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          RcntCr(),
+                          liveClassesList(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
+
+  Widget appbar() {
+    return Container(
+      child: AppBar(
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -104,7 +165,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         actions: [
           IconButton(
               onPressed: () {
@@ -129,6 +190,7 @@ class _HomePageState extends State<HomePage> {
               },
               child: Container(
                 decoration: BoxDecoration(
+                    color: Colors.white,
                     border: Border.all(
                       color: buttonGreen,
                     ),
@@ -160,39 +222,6 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: isLoading == true
-          ? Center(
-              child: SpinKitFadingCube(
-              color: buttonGreen,
-              size: 20,
-            ))
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 60),
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      NameSection(),
-                      BannerClass(),
-                      SubjectsList(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Text(
-                          "Recent Courses",
-                          style: Txt12Med,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      RcntCr(),
-                      liveClassesList(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
     );
   }
 

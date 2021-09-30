@@ -450,7 +450,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 children: [
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.36,
+                                        0.31,
                                     child: Scrollbar(
                                       child: ListView.separated(
                                         scrollDirection: Axis.vertical,
