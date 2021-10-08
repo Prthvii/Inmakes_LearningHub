@@ -81,9 +81,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey, extendBody: true,
-
-      // drawer: NewDrawer(),
+      key: scaffoldKey,
+      extendBody: true,
       drawer: DrawerWidget(id: userID.toString(), name: name.toString()),
       backgroundColor: Colors.white,
       appBar: PreferredSize(

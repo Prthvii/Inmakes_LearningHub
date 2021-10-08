@@ -145,11 +145,25 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
         initializePlayer();
       });
-      var response = await viewVideoComments(videoId);
-      if (response["attributes"]['status'].toString() == "Success") {
-        arrComments = response["attributes"]["comments"];
-        print(arrComments);
-      }
+      // var response = await viewVideoComments(videoId);
+      // if (response["attributes"]['status'].toString() == "Success") {
+      //   arrComments = response["attributes"]["comments"];
+      //   print(arrComments);
+      // }
+    } else {
+      showToastSuccess("Something went wrong!");
+    }
+    setState(() {
+      isLoading = false;
+    });
+    return "0";
+  }
+
+  Future<String> cmmmntt() async {
+    var response = await viewVideoComments(videoId);
+    if (response["attributes"]['status'].toString() == "Success") {
+      arrComments = response["attributes"]["comments"];
+      print(arrComments);
     } else {
       showToastSuccess("Something went wrong!");
     }
@@ -643,17 +657,19 @@ class _PlayerScreenState extends State<PlayerScreen> {
             padding: const EdgeInsets.only(right: 10),
             child: GestureDetector(
               onTap: () async {
+                print("videoId");
+                print(videoId);
+                print(commentController.text);
+                print("videoId");
                 var comment =
                     await postComment(videoId, commentController.text);
-                print("comment");
-                print(comment);
                 if (comment['attributes']['status'].toString() == "Success") {
                   showToastSuccess(comment["attributes"]["response"]);
                   commentController.clear();
                 }
                 setState(() {
                   isLoading = true;
-                  video();
+                  cmmmntt();
                 });
               },
               child: Container(

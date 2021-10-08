@@ -41,13 +41,13 @@ class _newBottomState extends State<newBottom> {
       //   text: 'Exams',
       // ),
       GButton(
-        icon: _selectedIndex == 3
+        icon: _selectedIndex == 2
             ? CupertinoIcons.person_fill
             : CupertinoIcons.person,
         text: 'Profile',
       ),
       GButton(
-        icon: _selectedIndex == 4
+        icon: _selectedIndex == 3
             ? CupertinoIcons.envelope_fill
             : CupertinoIcons.envelope,
         text: 'Contact',
@@ -63,16 +63,16 @@ class _newBottomState extends State<newBottom> {
         extendBody: true,
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: Container(
-          margin: EdgeInsets.all(10),
+          // margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 20,
-                color: Colors.black.withOpacity(.1),
-              )
-            ],
+            // borderRadius: BorderRadius.circular(1),
+            // boxShadow: [
+            //   BoxShadow(
+            //     blurRadius: 20,
+            //     color: Colors.black.withOpacity(.1),
+            //   )
+            // ],
           ),
           child: SafeArea(
             child: Padding(

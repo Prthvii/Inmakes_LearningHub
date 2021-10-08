@@ -17,6 +17,7 @@ class EnterDetails extends StatefulWidget {
 }
 
 class _EnterDetailsState extends State<EnterDetails> {
+  bool _passwordVisible = false;
   TextEditingController nameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController pinController = new TextEditingController();
@@ -66,9 +67,20 @@ class _EnterDetailsState extends State<EnterDetails> {
     "Uttarakhand",
     "West Bengal",
   ];
+  void initState() {
+    _passwordVisible = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(0.1),
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+        ),
+      ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -123,8 +135,8 @@ class _EnterDetailsState extends State<EnterDetails> {
                   children: [
                     NameField(),
                     EmailField(),
-                    StateDropDown(),
                     Pincode(),
+                    StateDropDown(),
                     Button()
                   ],
                 ),
@@ -247,10 +259,10 @@ class _EnterDetailsState extends State<EnterDetails> {
             borderRadius: BorderRadius.circular(4),
             color: liteBlack),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.only(left: 20, top: 5),
           child: TextFormField(
             cursorColor: Colors.white12,
-            keyboardType: TextInputType.phone,
+            obscureText: !_passwordVisible,
             controller: pinController,
             autofocus: false,
             inputFormatters: [
@@ -260,8 +272,19 @@ class _EnterDetailsState extends State<EnterDetails> {
                 fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
             decoration: new InputDecoration(
               border: InputBorder.none,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Color(0xff446270),
+                ),
+                onPressed: () {
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                },
+              ),
               hintStyle: blckTextStyle,
-              hintText: "Pin Code",
+              hintText: "Password",
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
               errorBorder: InputBorder.none,

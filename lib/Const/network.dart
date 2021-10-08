@@ -1,4 +1,4 @@
-final baseUrl = "http://phpstack-516111-1997223.cloudwaysapps.com/api/";
+final baseUrl = "https://inmakeslh.in/api/";
 final secKey = "2a067feaeb7090f89069714b2094818f";
 
 //-----------------

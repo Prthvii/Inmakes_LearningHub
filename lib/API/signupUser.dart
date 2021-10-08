@@ -11,6 +11,7 @@ Future signUpApi(num, name, email, state, pin) async {
     'mobileNumber': num.toString(),
     'fullName': name.toString(),
     'emailId': email.toString(),
+    'password': pin.toString(),
     'devicePlatform': "android",
     'referralCode': "",
     'centerId': "1",

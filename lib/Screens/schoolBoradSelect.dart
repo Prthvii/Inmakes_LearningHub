@@ -113,7 +113,7 @@ class _SelectSchoolBoardState extends State<SelectSchoolBoard> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "Select you school board",
+                              "Select you state",
                               style: TextStyle(
                                   fontSize: 20,
                                   color: BlckColor,
