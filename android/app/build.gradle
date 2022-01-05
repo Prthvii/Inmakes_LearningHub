@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.inmakes.learninghub"
-        minSdkVersion 16
+        applicationId "com.inmakes.inmakeslh"
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

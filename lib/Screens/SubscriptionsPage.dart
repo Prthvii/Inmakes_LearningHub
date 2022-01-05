@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:learninghub/API/mySubscriptionsApi.dart';
 import 'package:learninghub/Const/Constants.dart';
 import 'package:learninghub/Helper/snackbar_toast_helper.dart';
+import 'package:learninghub/Screens/paymentGateway.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SubscriptionsPage extends StatefulWidget {
@@ -118,137 +119,150 @@ class _SubscriptionsPageState extends State<SubscriptionsPage> {
   }
 
   list(var item, int index) {
-    return Stack(
-      children: [
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 12),
-            child: Row(
-              children: [
-                Image.asset(
-                  "assets/images/AppIcon.png",
-                  height: 65,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            "assets/images/book.gif",
-                            height: 13,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            item["courseName"].toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            "assets/images/clock.gif",
-                            height: 15,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          RichText(
-                            text: TextSpan(
-                                text: 'Course Duration:  ',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12),
-                                children: [
-                                  TextSpan(
-                                    text: item["courseDetails"].toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12),
-                                  )
-                                ]),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Image.asset(
-                            "assets/images/calendar.gif",
-                            height: 15,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          RichText(
-                            text: TextSpan(
-                                text: 'Expiry Date:  ',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12),
-                                children: [
-                                  TextSpan(
-                                    text: item["expired_on"].toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12),
-                                  )
-                                ]),
-                          ),
-                        ],
-                      ),
-                    ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => paymentPage(
+                    // amount: courseFee,
+                    id: item["courseId"].toString(),
+                  )),
+        );
+      },
+      child: Stack(
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 12),
+              child: Row(
+                children: [
+                  Image.asset(
+                    "assets/images/AppIcon.png",
+                    height: 65,
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset(
+                              "assets/images/book.gif",
+                              height: 13,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              item["courseName"].toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Image.asset(
+                              "assets/images/clock.gif",
+                              height: 15,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                  text: 'Course Duration:  ',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12),
+                                  children: [
+                                    TextSpan(
+                                      text: item["courseDetails"].toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12),
+                                    )
+                                  ]),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Image.asset(
+                              "assets/images/calendar.gif",
+                              height: 15,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                  text: 'Expiry Date:  ',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12),
+                                  children: [
+                                    TextSpan(
+                                      text: item["expired_on"].toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12),
+                                    )
+                                  ]),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 4, top: 4),
-          child: Align(
-              alignment: Alignment.topRight,
-              child: Card(
-                elevation: 2,
-                margin: EdgeInsets.all(0),
-                color: buttonGreen,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(3)),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4),
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.indigo[100],
-                    period: Duration(milliseconds: 800),
-                    highlightColor: Colors.white,
-                    child: Text("PREMIUM",
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 11,
-                            letterSpacing: 0.6,
-                            wordSpacing: 1,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600)),
+          Padding(
+            padding: const EdgeInsets.only(right: 4, top: 4),
+            child: Align(
+                alignment: Alignment.topRight,
+                child: Card(
+                  elevation: 2,
+                  margin: EdgeInsets.all(0),
+                  color: buttonGreen,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.only(topRight: Radius.circular(3)),
                   ),
-                ),
-              )),
-        ),
-      ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 6.0, vertical: 4),
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.indigo[100],
+                      period: Duration(milliseconds: 800),
+                      highlightColor: Colors.white,
+                      child: Text("PREMIUM",
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 11,
+                              letterSpacing: 0.6,
+                              wordSpacing: 1,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                )),
+          ),
+        ],
+      ),
     );
   }
 }

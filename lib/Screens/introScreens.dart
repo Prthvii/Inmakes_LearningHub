@@ -21,6 +21,7 @@ class _IntroScreensState extends State<IntroScreens> {
 
   final introKey = GlobalKey<IntroductionScreenState>();
   void _onIntroEnd(context) {
+    print("homeee");
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => newBottom()),
     );

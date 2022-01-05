@@ -11,6 +11,7 @@ import 'package:learninghub/Screens/LiveClasses.dart';
 import 'package:learninghub/Screens/Notification.dart';
 import 'package:learninghub/Screens/PlayerScreen.dart';
 import 'package:learninghub/Screens/SingleSubChapters.dart';
+import 'package:learninghub/Screens/schoolBoradSelect.dart';
 import 'package:learninghub/Widgets/Drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -141,6 +142,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget appbar() {
+    final ss = MediaQuery.of(context).size;
     return Container(
       child: AppBar(
         automaticallyImplyLeading: false,
@@ -150,70 +152,66 @@ class _HomePageState extends State<HomePage> {
               onTap: () => scaffoldKey.currentState.openDrawer(),
               child: Image(
                 image: AssetImage("assets/images/Menu.png"),
-                height: 32,
-                width: 32,
+                height: ss.height * 0.1,
+                width: ss.width * 0.1,
               ),
-            ),
-            SizedBox(
-              width: 15,
             ),
             SvgPicture.asset(
               "assets/images/logo.svg",
-              height: 35,
+              width: ss.width * 0.4,
             ),
           ],
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
         actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationPage()),
-                );
-              },
-              icon: Icon(
-                Icons.notifications,
-                color: Colors.black,
-                size: 20,
-              )),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
+            },
+            child: Icon(
+              Icons.notifications,
+              size: ss.height * 0.03,
+              color: Colors.black,
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: EdgeInsets.symmetric(
+                horizontal: ss.width * 0.025, vertical: ss.height * 0.015),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LiveClasses()),
+                  MaterialPageRoute(builder: (context) => SelectSchoolBoard()),
                 );
               },
               child: Container(
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                     color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: (Colors.grey[500]),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
                     border: Border.all(
                       color: buttonGreen,
                     ),
                     borderRadius: BorderRadius.circular(4)),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.circle,
+                  child: Text(
+                    "Add New Course",
+                    style: TextStyle(
                         color: buttonGreen,
-                        size: 15,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "Classes",
-                        style: TextStyle(
-                            color: buttonGreen,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600),
-                      )
-                    ],
+                        fontSize: ss.height * 0.017,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -225,6 +223,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget NameSection() {
+    final ss = MediaQuery.of(context).size;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       child: Column(
@@ -235,11 +235,12 @@ class _HomePageState extends State<HomePage> {
             style: Txt12Med,
           ),
           SizedBox(
-            height: 5,
+            height: ss.height * 0.01,
           ),
           Text(
             name.toString(),
-            style: Txt24Bold,
+            style: TextStyle(
+                fontSize: ss.height * 0.04, fontWeight: FontWeight.bold),
           )
         ],
       ),
@@ -247,12 +248,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget BannerClass() {
+    final ss = MediaQuery.of(context).size;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 15),
       child: Stack(
         children: [
           Container(
-            height: 80,
+            height: ss.height * 0.12,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
@@ -266,17 +269,17 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 15),
+                  padding: EdgeInsets.only(left: ss.width * 0.05, top: 15),
                   child: Text(
                     "Course",
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: ss.height * 0.02,
                         fontWeight: FontWeight.w400),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: ss.width * 0.05),
                   child: DropdownButton<String>(
                     value: dropdownValue,
                     isExpanded: true,
@@ -319,8 +322,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget SubjectsList() {
+    final ss = MediaQuery.of(context).size;
+
     return Container(
-      height: 80,
+      height: ss.height * 0.13,
       child: Padding(
         padding: const EdgeInsets.only(top: 20, bottom: 20, left: 15),
         child: ListView.separated(
@@ -340,6 +345,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   subs(var item, int index) {
+    final ss = MediaQuery.of(context).size;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -368,7 +375,7 @@ class _HomePageState extends State<HomePage> {
                 item["subjectName"].toString(),
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 13,
+                    fontSize: ss.height * 0.02,
                     fontWeight: FontWeight.w600),
               )
             ],
@@ -379,8 +386,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   RcntCr() {
+    final ss = MediaQuery.of(context).size;
+
     return Container(
-      height: 140,
+      height: ss.height * 0.23,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: ListView.separated(
@@ -401,6 +410,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   courses(var item, int index) {
+    final ss = MediaQuery.of(context).size;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -412,9 +423,10 @@ class _HomePageState extends State<HomePage> {
       child: Stack(
         children: [
           Container(
-            width: 210,
+            width: ss.width * 0.6,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
+                color: Colors.red,
                 boxShadow: [
                   BoxShadow(
                     color: (Colors.grey[300]),
@@ -438,7 +450,7 @@ class _HomePageState extends State<HomePage> {
                     Icon(
                       Icons.play_circle_outline,
                       color: Colors.white,
-                      size: 30,
+                      size: ss.height * 0.04,
                     ),
                     SizedBox(
                       width: 5,
@@ -447,7 +459,10 @@ class _HomePageState extends State<HomePage> {
                       item["chapterName"].toString(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Txt12Semi,
+                      style: TextStyle(
+                          fontSize: ss.height * 0.021,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
                     )
                   ],
                 )),
@@ -469,15 +484,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   liveClassesList() {
+    final ss = MediaQuery.of(context).size;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 30),
       child: Container(
-        height: 400,
+        height: ss.height * 0.7,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
             Container(
-              height: 400,
+              height: ss.height * 0.6,
               width: MediaQuery.of(context).size.width * 0.7,
               decoration: BoxDecoration(
                   color: BlckColor, borderRadius: BorderRadius.circular(8)),
@@ -593,6 +610,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget Button(String txt) {
+    final ss = MediaQuery.of(context).size;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 32),
       alignment: Alignment.center,
